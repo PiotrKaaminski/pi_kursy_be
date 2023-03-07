@@ -1,13 +1,5 @@
-plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.0.4'
-    id 'io.spring.dependency-management' version '1.1.0'
-    id 'org.liquibase.gradle' version '2.1.1'
-}
-
 group = 'com.pi'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+version = '0.0.1'
 
 ext {
     db = {}
@@ -18,54 +10,4 @@ ext {
     db.port = "5432"
     db.schema = "categories"
     db.url = "jdbc:postgresql://${db.host}:${db.port}/${db.name}"
-    db.driver = "org.postgresql.Driver"
-}
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
-repositories {
-    mavenCentral()
-}
-
-processResources {
-    expand(db.properties)
-    excludes = ["**/db/**", "**/wsdl/**"]
-}
-
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-
-    runtimeOnly 'org.postgresql:postgresql'
-
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
-
-    compileOnly 'org.projectlombok:lombok'
-
-    annotationProcessor 'org.projectlombok:lombok'
-
-    liquibaseRuntime 'org.liquibase:liquibase-core:4.18.0'
-    liquibaseRuntime 'info.picocli:picocli:4.7.0'
-    liquibaseRuntime 'org.postgresql:postgresql'
-}
-
-tasks.named('test') {
-    useJUnitPlatform()
-}
-
-liquibase {
-    activities {
-        main {
-            url db.url
-            username db.username
-            password db.password
-            changeLogFile 'src/main/resources/db/changelog/db.changelog.master.xml'
-        }
-    }
 }

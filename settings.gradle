@@ -1,1 +1,3 @@
 rootProject.name = 'pi_kursy_be'
+
+include 'adapters', 'application', 'domain', 'monolith', 'persistence'
