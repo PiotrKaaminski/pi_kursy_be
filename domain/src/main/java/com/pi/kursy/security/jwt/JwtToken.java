@@ -10,6 +10,7 @@ public interface JwtToken {
     boolean isValid();
     boolean isExpired();
     boolean isRefreshExpired();
+    void invalidateToken();
 
     @Builder
     record JwtData(String id, String username, RoleEnum role) {}

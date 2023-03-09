@@ -72,7 +72,7 @@ class JwtAuthorizationFilter extends OncePerRequestFilter {
             log.warn("jwt token is not valid");
             return true;
         }
-        if (!jwt.isExpired()) {
+        if (jwt.isExpired()) {
             log.warn("jwt token is expired");
             return true;
         }

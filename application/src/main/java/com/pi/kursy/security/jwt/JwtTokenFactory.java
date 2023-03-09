@@ -8,13 +8,14 @@ import org.springframework.stereotype.Component;
 public class JwtTokenFactory {
 
     private final JwtTokenImpl.Configuration jwtConfiguration;
+    private final InvalidTokenCache invalidTokenCache;
 
     public JwtToken fromUserData(JwtToken.JwtData jwtData) {
-        return new JwtTokenImpl(jwtConfiguration, jwtData);
+        return new JwtTokenImpl(invalidTokenCache, jwtConfiguration, jwtData);
     }
 
     public JwtToken fromEncodedJwt(String token) {
-        return new JwtTokenImpl(jwtConfiguration, token);
+        return new JwtTokenImpl(invalidTokenCache, jwtConfiguration, token);
     }
 
 

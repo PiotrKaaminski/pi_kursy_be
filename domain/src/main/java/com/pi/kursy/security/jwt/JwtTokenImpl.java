@@ -6,18 +6,22 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.Objects;
 
+@Slf4j
 class JwtTokenImpl implements JwtToken {
 
     private static final Key JWT_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
     private final Configuration configuration;
+    private final InvalidTokenCache invalidTokenCache;
 
     @Getter
     private final JwtData jwtData;
@@ -30,11 +34,15 @@ class JwtTokenImpl implements JwtToken {
     @Getter
     private boolean isRefreshExpired;
 
+    private Date refreshExpirationDate;
 
 
-    JwtTokenImpl(Configuration configuration, JwtData jwtData) {
+
+    JwtTokenImpl(InvalidTokenCache invalidTokenCache, Configuration configuration, JwtData jwtData) {
         Objects.requireNonNull(configuration);
+        Objects.requireNonNull(invalidTokenCache);
         this.configuration = configuration;
+        this.invalidTokenCache = invalidTokenCache;
         this.jwtData = jwtData;
         this.encodedToken = encodeJwt(jwtData);
         this.isValid = true;
@@ -42,18 +50,20 @@ class JwtTokenImpl implements JwtToken {
         this.isRefreshExpired = false;
     }
 
-    JwtTokenImpl(Configuration configuration, String encodedToken) {
+    JwtTokenImpl(InvalidTokenCache invalidTokenCache, Configuration configuration, String encodedToken) {
         Objects.requireNonNull(configuration);
+        Objects.requireNonNull(invalidTokenCache);
         this.configuration = configuration;
+        this.invalidTokenCache = invalidTokenCache;
         this.encodedToken = encodedToken;
-        this.jwtData = decodeJwt(encodedToken);
-        this.isValid = jwtData != null;
+        this.jwtData = decodeJwt();
+        this.isValid = determineTokenValidity();
     }
 
     private String encodeJwt(JwtData jwtData) {
         var now = new Date();
         var expiryDate = new Date(now.getTime() + configuration.getExpirationTime());
-        var refreshExpiryDate = new Date(expiryDate.getTime() + configuration.getExpirationTime());
+        refreshExpirationDate = new Date(expiryDate.getTime() + configuration.getRefreshExpirationTime());
 
         return Jwts.builder()
                 .setSubject(jwtData.username())
@@ -61,11 +71,11 @@ class JwtTokenImpl implements JwtToken {
                 .claim(ClaimsEnum.ROLE.getName(), jwtData.role())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .claim(ClaimsEnum.REFRESH_EXPIRATION_DATE.getName(), refreshExpiryDate)
+                .claim(ClaimsEnum.REFRESH_EXPIRATION_DATE.getName(), refreshExpirationDate.getTime() / 1000)
                 .signWith(JWT_KEY).compact();
     }
 
-    private JwtData decodeJwt(String encodedToken) {
+    private JwtData decodeJwt() {
         try {
             var claims = Jwts.parserBuilder()
                     .setSigningKey(JWT_KEY)
@@ -77,6 +87,8 @@ class JwtTokenImpl implements JwtToken {
         } catch (ExpiredJwtException e) {
             this.isExpired = true;
             return parseForRefresh(e);
+        } catch (SignatureException e) {
+            log.warn("Tried do decode jwt token with invalid signature");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -91,15 +103,31 @@ class JwtTokenImpl implements JwtToken {
     }
 
     private JwtData getDataFromClaims(Claims claims) {
+        this.refreshExpirationDate = claims.get(ClaimsEnum.REFRESH_EXPIRATION_DATE.getName(), Date.class);
         return JwtData.builder()
                 .id(claims.get(ClaimsEnum.USER_ID.getName(), String.class))
                 .username(claims.getSubject())
-                .role(claims.get(ClaimsEnum.ROLE.getName(), RoleEnum.class)).build();
+                .role(RoleEnum.valueOf(claims.get(ClaimsEnum.ROLE.getName(), String.class))).build();
+    }
+
+    private boolean determineTokenValidity() {
+        if (jwtData == null) {
+            return false;
+        }
+        return !invalidTokenCache.containsToken(encodedToken);
     }
 
     interface Configuration {
         long getExpirationTime();
         long getRefreshExpirationTime();
+    }
+
+    @Override
+    public void invalidateToken() {
+        if (!this.isValid) {
+            return;
+        }
+        invalidTokenCache.addToken(this.encodedToken, this.refreshExpirationDate);
     }
 
     @RequiredArgsConstructor
