@@ -13,7 +13,7 @@ class UserPrincipalRepositoryImpl implements UserPrincipalRepository {
 
     @Override
     public Optional<UserPrincipalSnapshot> getByUsername(String username) {
-        return jpaRepository.findByUsername(username)
+        return jpaRepository.findById(username)
                 .map(UserPrincipalEntity::toSnapshot);
     }
 
