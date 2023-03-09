@@ -71,7 +71,7 @@ class JwtTokenImpl implements JwtToken {
                 .claim(ClaimsEnum.ROLE.getName(), jwtData.role())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .claim(ClaimsEnum.REFRESH_EXPIRATION_DATE.getName(), refreshExpirationDate.getTime() / 1000)
+                .claim(ClaimsEnum.REFRESH_EXPIRATION_DATE.getName(), refreshExpirationDate.getTime())
                 .signWith(JWT_KEY).compact();
     }
 

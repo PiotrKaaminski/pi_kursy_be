@@ -1,31 +1,34 @@
-# Getting Started
+# Główny opis
+## Użytkownicy
+### Zakładanie użytkownika z rolą ADMIN/TEACHER
+Użytkownik z taką rolą może założyć jedynie admin<br>
+podajemy dane użytkownika oraz hasło, użytkownik jest na statusie TEMPORARY_PASSWORD_SET<br>
+po zalogowaniu na nowego użytkownika używając tymczasowego hasła mamy jedynie uprawnienia do modifyPassword<br>
+należy zmienić hasło i ustawić jakieś własne<br>
+od teraz można korzystać z nowego użytkownika
 
-### Reference Documentation
+### Zakładanie użytkownika z rolą STUDENT
+Każdy zakłada konto samemu sobie<br>
+podajemy dane użytkownika wraz z hasłem, po założeniu konta można się na nie zalogować
 
-For further reference, please consider the following sections:
-
-* [Official Gradle documentation](https://docs.gradle.org)
-* [Spring Boot Gradle Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/3.0.4/gradle-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/3.0.4/gradle-plugin/reference/html/#build-image)
-* [Spring Web](https://docs.spring.io/spring-boot/docs/3.0.4/reference/htmlsingle/#web)
-* [Spring Security](https://docs.spring.io/spring-boot/docs/3.0.4/reference/htmlsingle/#web.security)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/3.0.4/reference/htmlsingle/#data.sql.jpa-and-spring-data)
-
-### Guides
-
-The following guides illustrate how to use some features concretely:
-
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
-* [Securing a Web Application](https://spring.io/guides/gs/securing-web/)
-* [Spring Boot and OAuth2](https://spring.io/guides/tutorials/spring-boot-oauth2/)
-* [Authenticating a User with LDAP](https://spring.io/guides/gs/authenticating-ldap/)
-* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
-
-### Additional Links
-
-These additional references should also help you:
-
-* [Gradle Build Scans – insights for your project's build](https://scans.gradle.com#gradle)
-
+### Uprawnienia
+#### ADMIN
+* zakładania kont innym użytkownikom z rolą ADMIN lub TEACHER
+* zarządzanie użytkownikami (usuwanie, przeglądanie, modyfikacja)
+* dodawanie nowych kategorii kursów
+* dodawanie nowych kursów **(treść kursów dodaje tylko TEACHER)**
+* podgląd wszystkich kursów
+* podgląd statystyk wszystkich kursów
+* przypisanie kursu do użytkownika TEACHER
+#### TEACHER
+* zarządzanie treścią kursów, do których jest przypisany
+* podgląd statystyk kursów, do których jest przypisany
+* podgląd wszystkich kursów
+#### STUDENT
+* przegląd dostępnych kursów
+* wykup kursu
+* dostęp do zawartości wykupionych kursów
+# TODO
+* poprawa obsługi błędów, zwracanie prawidłowych struktur
+* dodawanie użytkowników ADMIN i TEACHER, zatwierdzenie rejestracji poprzez ustalenie hasła
+* rejestracja użytkowników STUDENT
