@@ -1,5 +1,6 @@
 package com.pi.kursy.security.authentication.login;
 
+import com.pi.kursy.security.authentication.logout.LogoutFacade;
 import com.pi.kursy.security.jwt.JwtToken;
 import com.pi.kursy.security.jwt.JwtTokenFactory;
 import lombok.Getter;
@@ -13,6 +14,7 @@ class LoginFacade {
     private final JwtTokenFactory jwtTokenFactory;
     private final AuthenticationManager authenticationManager;
     private final LoginRepository repository;
+    private final LogoutFacade logoutFacade;
 
     LoginResponseDto login(LoginDto dto) throws LoginException {
         try {
@@ -24,6 +26,12 @@ class LoginFacade {
         var userSnapshot = repository.findByUsername(dto.username()).orElseThrow(LoginException::new);
         JwtToken token = jwtTokenFactory.fromUserData(userSnapshot.toJwtData());
         return new LoginResponseDto(token.getEncodedToken());
+    }
+
+    LoginResponseDto refresh(String authorizationHeader) throws LogoutFacade.InvalidTokenException {
+        var jwtToken = logoutFacade.logout(authorizationHeader);
+        jwtToken = jwtToken.refreshToken();
+        return new LoginResponseDto(jwtToken.getEncodedToken());
     }
 
     static class LoginException extends Exception {

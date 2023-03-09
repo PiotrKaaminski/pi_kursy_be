@@ -11,6 +11,7 @@ public interface JwtToken {
     boolean isExpired();
     boolean isRefreshExpired();
     void invalidateToken();
+    JwtToken refreshToken();
 
     @Builder
     record JwtData(String id, String username, RoleEnum role) {}

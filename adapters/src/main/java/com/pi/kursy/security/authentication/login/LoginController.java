@@ -1,5 +1,6 @@
 package com.pi.kursy.security.authentication.login;
 
+import com.pi.kursy.security.authentication.logout.LogoutFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,12 @@ class LoginController {
     @PostMapping("/login")
     LoginResponse login(@RequestBody LoginRequest request) throws LoginFacade.LoginException {
         var responseDto = facade.login(LoginRequest.toDto(request));
+        return LoginResponse.fromDto(responseDto);
+    }
+
+    @PostMapping("/refresh")
+    LoginResponse refresh(@RequestHeader("Authorization") String authorizationHeader) throws LogoutFacade.InvalidTokenException {
+        var responseDto = facade.refresh(authorizationHeader);
         return LoginResponse.fromDto(responseDto);
     }
 

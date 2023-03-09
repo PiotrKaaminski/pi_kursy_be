@@ -130,6 +130,11 @@ class JwtTokenImpl implements JwtToken {
         invalidTokenCache.addToken(this.encodedToken, this.refreshExpirationDate);
     }
 
+    @Override
+    public JwtToken refreshToken() {
+        return new JwtTokenImpl(invalidTokenCache, configuration, jwtData);
+    }
+
     @RequiredArgsConstructor
     @Getter
     private enum ClaimsEnum {
