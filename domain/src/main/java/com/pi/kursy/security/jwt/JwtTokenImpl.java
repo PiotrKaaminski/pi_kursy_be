@@ -62,9 +62,10 @@ class JwtTokenImpl implements JwtToken {
 
     private String encodeJwt(JwtData jwtData) {
         var now = new Date();
-        var expiryDate = new Date(now.getTime() + configuration.getExpirationTime());
-        refreshExpirationDate = new Date(expiryDate.getTime() + configuration.getRefreshExpirationTime());
-
+        var expirationTime = configuration.getExpirationTime() * 60 * 1000;
+        var refreshExpirationTime = configuration.getRefreshExpirationTime() * 60 * 1000;
+        var expiryDate = new Date(now.getTime() + configuration.getExpirationTime() + expirationTime);
+        refreshExpirationDate = new Date(expiryDate.getTime() + refreshExpirationTime);
         return Jwts.builder()
                 .setSubject(jwtData.username())
                 .claim(ClaimsEnum.USER_ID.getName(), jwtData.id())

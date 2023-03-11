@@ -9,10 +9,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 class LoginRepositoryImpl implements LoginRepository {
 
-    private final UserJpaRepository jpaRepository;
+    private final UserAuthenticationJpaRepository jpaRepository;
 
     @Override
     public Optional<UserSnapshot> findByUsername(String username) {
-        return jpaRepository.findById(username).map(UserEntity::toSnapshot);
+        return jpaRepository.findById(username).map(LoginUserEntity::toSnapshot);
     }
 }

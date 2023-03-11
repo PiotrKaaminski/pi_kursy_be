@@ -16,7 +16,7 @@ import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
-class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final GetUserPrincipalUC getUserPrincipalUC;
 
@@ -29,7 +29,7 @@ class UserDetailsServiceImpl implements UserDetailsService {
 
     @Data
     @Builder
-    static class UserPrincipal implements UserDetails {
+    public static class UserPrincipal implements UserDetails {
 
         private final String id;
         private final String username;

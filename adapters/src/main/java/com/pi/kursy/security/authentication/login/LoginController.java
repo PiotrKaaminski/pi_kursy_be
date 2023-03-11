@@ -13,7 +13,7 @@ class LoginController {
 
     @PostMapping("/login")
     LoginResponse login(@RequestBody LoginRequest request) throws LoginFacade.LoginException {
-        var responseDto = facade.login(LoginRequest.toDto(request));
+        var responseDto = facade.login(request.toDto());
         return LoginResponse.fromDto(responseDto);
     }
 
@@ -24,10 +24,10 @@ class LoginController {
     }
 
     record LoginRequest(String username, String password) {
-        static LoginDto toDto(LoginRequest request) {
+        LoginDto toDto() {
             return new LoginDto(
-                    request.username,
-                    request.password
+                    username,
+                    password
             );
         }
     }

@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
-class UserEntity {
+class LoginUserEntity {
     private String externalId;
     @Id
     private String username;

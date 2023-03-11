@@ -5,8 +5,8 @@
 
     <property name="schema" value="pi_kursy"/>
 
-    <changeSet author="PK" id="1">
-        <createTable schemaName="${schema}" tableName="users">
+    <changeSet id="1" author="PK">
+        <createTable tableName="users" schemaName="${schema}">
             <column autoIncrement="true" name="id" type="bigint">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="users_pk"/>
             </column>
@@ -23,5 +23,12 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+    </changeSet>
+    <changeSet id="2" author="PK">
+        <addColumn tableName="users" schemaName="${schema}">
+            <column name="status" type="varchar(64)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
     </changeSet>
 </databaseChangeLog>
