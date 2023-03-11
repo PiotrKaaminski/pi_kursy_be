@@ -3,5 +3,6 @@ package com.pi.kursy.users.register;
 import java.util.Optional;
 
 interface ChangePasswordRepository {
-    Optional<ChangePasswordEntity> findByExternalId(String externalId);
+    Optional<ChangePasswordSnapshot> findByExternalId(String externalId);
+    void update(ChangePasswordSnapshot snapshot);
 }

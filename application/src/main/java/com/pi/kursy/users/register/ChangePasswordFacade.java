@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 class ChangePasswordFacade {
 
-    void changePassword(ChangePasswordDto dto) {
+    private final ChangePasswordFactory factory;
 
+    void changePassword(ChangePasswordDto dto) throws Exception {
+        var changePasswordEntity = factory.create(dto);
     }
 }

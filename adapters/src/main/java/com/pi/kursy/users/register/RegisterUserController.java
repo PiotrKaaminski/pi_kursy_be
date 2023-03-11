@@ -29,7 +29,7 @@ class RegisterUserController {
 
     @PatchMapping("password")
     void modifyPassword(
-            @RequestBody ChangePasswordRequest request, UsernamePasswordAuthenticationToken authToken) {
+            @RequestBody ChangePasswordRequest request, UsernamePasswordAuthenticationToken authToken) throws Exception {
         var userId = ((UserDetailsServiceImpl.UserPrincipal) authToken.getPrincipal()).getId();
         changePasswordFacade.changePassword(request.toDto(userId));
     }

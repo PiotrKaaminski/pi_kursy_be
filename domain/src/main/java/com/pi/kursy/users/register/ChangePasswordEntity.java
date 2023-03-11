@@ -11,14 +11,16 @@ class ChangePasswordEntity {
     private String password;
     private UserStatus status;
 
+    private final String oldPassword;
     private final String newPassword;
 
-    ChangePasswordEntity(PasswordValidator passwordValidator, PasswordEncoder passwordEncoder, Long id, String password, UserStatus status, String newPassword) {
+    ChangePasswordEntity(PasswordValidator passwordValidator, PasswordEncoder passwordEncoder, Long id, String password, UserStatus status, String oldPassword, String newPassword) {
         this.passwordValidator = passwordValidator;
         this.passwordEncoder = passwordEncoder;
         this.id = id;
         this.password = password;
         this.status = status;
+        this.oldPassword = oldPassword;
         this.newPassword = newPassword;
     }
 }
