@@ -1,9 +1,7 @@
 package com.pi.kursy.users.register;
 
 import com.pi.kursy.users.shared.UserStatus;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.springframework.data.annotation.PersistenceCreator;
 
 @Entity
@@ -13,6 +11,7 @@ class ChangePasswordOrmEntity {
     private Long id;
     private String externalId;
     private String password;
+    @Enumerated(EnumType.STRING)
     private UserStatus status;
 
     @PersistenceCreator

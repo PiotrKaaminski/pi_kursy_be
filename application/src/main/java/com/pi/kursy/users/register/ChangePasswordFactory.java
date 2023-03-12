@@ -15,15 +15,15 @@ class ChangePasswordFactory {
         var snapshot = repository.findByExternalId(dto.userId())
                 .orElseThrow(() -> new Exception("user with id " + dto.userId() + " doesn't exist"));
 
-        return new ChangePasswordEntity(
-                passwordValidator,
-                passwordEncoder,
-                snapshot.id(),
-                snapshot.password(),
-                snapshot.status(),
-                dto.oldPassword(),
-                dto.newPassword()
-        );
+        return new ChangePasswordEntity.Builder()
+                .passwordValidator(passwordValidator)
+                .passwordEncoder(passwordEncoder)
+                .id(snapshot.id())
+                .externalId(snapshot.externalId())
+                .password(snapshot.password())
+                .status(snapshot.status())
+                .oldPassword(dto.oldPassword())
+                .newPassword(dto.newPassword()).build();
     }
 
 }

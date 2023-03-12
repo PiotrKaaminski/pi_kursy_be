@@ -17,12 +17,12 @@ class RegisterUserEntity {
     private final PasswordValidator passwordValidator;
 
     private String externalId;
-    private String username;
+    private final String username;
     private String password;
-    private RoleEnum role;
+    private final RoleEnum role;
     private UserStatus status;
 
-    RegisterUserEntity(RegisterUserRepository repository, PasswordEncoder passwordEncoder, PasswordValidator passwordValidator, String username, String password, RoleEnum role) {
+    private RegisterUserEntity(RegisterUserRepository repository, PasswordEncoder passwordEncoder, PasswordValidator passwordValidator, String username, String password, RoleEnum role) {
         Objects.requireNonNull(repository, "RegisterUserRepository cannot be null");
         Objects.requireNonNull(passwordEncoder, "PasswordEncoder cannot be null");
         Objects.requireNonNull(passwordValidator, "PasswordValidator cannot be null");
