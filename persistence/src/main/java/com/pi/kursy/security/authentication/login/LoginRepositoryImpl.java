@@ -13,6 +13,6 @@ class LoginRepositoryImpl implements LoginRepository {
 
     @Override
     public Optional<UserSnapshot> findByUsername(String username) {
-        return jpaRepository.findById(username).map(LoginUserEntity::toSnapshot);
+        return jpaRepository.findByUsername(username).map(LoginUserEntity::toSnapshot);
     }
 }

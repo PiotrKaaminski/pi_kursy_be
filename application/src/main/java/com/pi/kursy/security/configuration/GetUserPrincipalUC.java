@@ -11,7 +11,7 @@ class GetUserPrincipalUC {
 
     private final UserPrincipalRepository repository;
 
-    Optional<UserPrincipalSnapshot> getByUsername(String username) {
-        return repository.getByUsername(username);
+    Optional<UserPrincipalSnapshot> findByUsername(String username) {
+        return repository.findByUsername(username);
     }
 }

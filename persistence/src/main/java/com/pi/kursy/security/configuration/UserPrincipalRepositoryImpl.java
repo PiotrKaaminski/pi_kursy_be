@@ -12,8 +12,8 @@ class UserPrincipalRepositoryImpl implements UserPrincipalRepository {
     private final UserPrincipalJpaRepository jpaRepository;
 
     @Override
-    public Optional<UserPrincipalSnapshot> getByUsername(String username) {
-        return jpaRepository.findById(username)
+    public Optional<UserPrincipalSnapshot> findByUsername(String username) {
+        return jpaRepository.findByUsername(username)
                 .map(UserPrincipalEntity::toSnapshot);
     }
 

@@ -30,5 +30,8 @@ podajemy dane użytkownika wraz z hasłem, po założeniu konta można się na n
 * dostęp do zawartości wykupionych kursów
 # TODO
 * poprawa obsługi błędów, zwracanie prawidłowych struktur
-* dodawanie użytkowników ADMIN i TEACHER, zatwierdzenie rejestracji poprzez ustalenie hasła
-* rejestracja użytkowników STUDENT
+
+* dodanie kursu wraz z przypisaniem do użytkownika TEACHER, admin nadaje nazwę kursu, cenę, kategorie i przypisuje teachera do kursu (admin)
+* dodanie modyfikacji kursu, teacher nadaje opis 
+* dodanie sekcji do kursu (tytuł)
+* dodanie filmu do kursu

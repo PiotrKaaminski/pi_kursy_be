@@ -7,11 +7,8 @@
 
     <changeSet id="1" author="PK">
         <createTable tableName="users" schemaName="${schema}">
-            <column autoIncrement="true" name="id" type="bigint">
+            <column name="id" type="varchar(128)">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="users_pk"/>
-            </column>
-            <column name="external_id" type="varchar(128)">
-                <constraints nullable="false" unique="true"/>
             </column>
             <column name="username" type="varchar(64)">
                 <constraints nullable="false" unique="true"/>
@@ -30,5 +27,22 @@
                 <constraints nullable="false"/>
             </column>
         </addColumn>
+    </changeSet>
+    <changeSet id="3" author="PK">
+        <addColumn tableName="users" schemaName="${schema}">
+            <column name="creation_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+    <changeSet id="4" author="PK">
+        <createTable tableName="categories" schemaName="${schema}">
+            <column name="id" type="varchar(128)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="categories_pk"/>
+            </column>
+            <column name="name" type="varchar(64)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
     </changeSet>
 </databaseChangeLog>

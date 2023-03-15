@@ -22,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return getUserPrincipalUC.getByUsername(username)
+        return getUserPrincipalUC.findByUsername(username)
                 .map(UserPrincipal::fromSnapshot)
                 .orElseThrow(() -> new UsernameNotFoundException("User with username " + username + " doesn't exist"));
     }
@@ -38,7 +38,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         static UserPrincipal fromSnapshot(UserPrincipalSnapshot snap) {
             return new UserPrincipal(
-                    snap.externalId(),
+                    snap.id(),
                     snap.username(),
                     snap.password(),
                     snap.role());

@@ -6,13 +6,13 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "users")
 class LoginUserEntity {
-    private String externalId;
     @Id
+    private String id;
     private String username;
     @Enumerated(EnumType.STRING)
     private RoleEnum role;
 
     UserSnapshot toSnapshot() {
-        return new UserSnapshot(externalId, username, role);
+        return new UserSnapshot(id, username, role);
     }
 }

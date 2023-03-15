@@ -8,8 +8,7 @@ import org.springframework.data.annotation.PersistenceCreator;
 @Table(name = "users")
 class ChangePasswordOrmEntity {
     @Id
-    private Long id;
-    private String externalId;
+    private String id;
     private String password;
     @Enumerated(EnumType.STRING)
     private UserStatus status;
@@ -17,9 +16,8 @@ class ChangePasswordOrmEntity {
     @PersistenceCreator
     protected ChangePasswordOrmEntity() {}
 
-    private ChangePasswordOrmEntity(Long id, String externalId, String password, UserStatus status) {
+    private ChangePasswordOrmEntity(String id, String password, UserStatus status) {
         this.id = id;
-        this.externalId = externalId;
         this.password = password;
         this.status = status;
     }
@@ -27,7 +25,6 @@ class ChangePasswordOrmEntity {
     ChangePasswordSnapshot toSnapshot() {
         return new ChangePasswordSnapshot(
                 id,
-                externalId,
                 password,
                 status
         );
@@ -36,7 +33,6 @@ class ChangePasswordOrmEntity {
     static ChangePasswordOrmEntity fromSnapshot(ChangePasswordSnapshot snapshot) {
         return new ChangePasswordOrmEntity(
                 snapshot.id(),
-                snapshot.externalId(),
                 snapshot.password(),
                 snapshot.status()
         );

@@ -12,8 +12,8 @@ class ChangePasswordRepositoryImpl implements ChangePasswordRepository {
     private final ChangePasswordJpaRepository jpaRepository;
 
     @Override
-    public Optional<ChangePasswordSnapshot> findByExternalId(String externalId) {
-        return jpaRepository.findByExternalId(externalId).map(ChangePasswordOrmEntity::toSnapshot);
+    public Optional<ChangePasswordSnapshot> findById(String id) {
+        return jpaRepository.findById(id).map(ChangePasswordOrmEntity::toSnapshot);
     }
 
     @Override

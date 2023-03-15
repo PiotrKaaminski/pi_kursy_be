@@ -7,19 +7,17 @@ class ChangePasswordEntity {
     private final PasswordValidator passwordValidator;
     private final PasswordEncoder passwordEncoder;
 
-    private final Long id;
-    private final String externalId;
+    private final String id;
     private String password;
     private UserStatus status;
 
     private final String oldPassword;
     private final String newPassword;
 
-    private ChangePasswordEntity(PasswordValidator passwordValidator, PasswordEncoder passwordEncoder, Long id, String externalId, String password, UserStatus status, String oldPassword, String newPassword) {
+    private ChangePasswordEntity(PasswordValidator passwordValidator, PasswordEncoder passwordEncoder, String id, String password, UserStatus status, String oldPassword, String newPassword) {
         this.passwordValidator = passwordValidator;
         this.passwordEncoder = passwordEncoder;
         this.id = id;
-        this.externalId = externalId;
         this.password = password;
         this.status = status;
         this.oldPassword = oldPassword;
@@ -68,7 +66,6 @@ class ChangePasswordEntity {
     private ChangePasswordSnapshot toSnapshot() {
         return new ChangePasswordSnapshot(
                 id,
-                externalId,
                 password,
                 status
         );
@@ -78,8 +75,7 @@ class ChangePasswordEntity {
         private PasswordEncoder passwordEncoder;
         private PasswordValidator passwordValidator;
 
-        private Long id;
-        private String externalId;
+        private String id;
         private String password;
         private UserStatus status;
         private String oldPassword;
@@ -95,13 +91,8 @@ class ChangePasswordEntity {
             return this;
         }
 
-        Builder id(Long id) {
+        Builder id(String id) {
             this.id = id;
-            return this;
-        }
-
-        Builder externalId(String externalId) {
-            this.externalId = externalId;
             return this;
         }
 
@@ -126,7 +117,7 @@ class ChangePasswordEntity {
         }
 
         ChangePasswordEntity build() {
-            return new ChangePasswordEntity(passwordValidator, passwordEncoder, id, externalId, password, status, oldPassword, newPassword);
+            return new ChangePasswordEntity(passwordValidator, passwordEncoder, id, password, status, oldPassword, newPassword);
         }
     }
 }

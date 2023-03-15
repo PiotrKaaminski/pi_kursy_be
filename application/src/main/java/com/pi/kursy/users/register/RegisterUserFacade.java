@@ -14,6 +14,6 @@ class RegisterUserFacade {
         var user = factory.create(dto);
         var snapshot = user.register();
         repository.save(snapshot);
-        return new RegisterUserResponseDto(snapshot.externalId());
+        return new RegisterUserResponseDto(snapshot.id());
     }
 }

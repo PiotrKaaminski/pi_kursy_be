@@ -4,6 +4,7 @@ import com.pi.kursy.security.shared.RoleEnum;
 import com.pi.kursy.users.shared.UserStatus;
 import org.springframework.util.StringUtils;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -16,11 +17,12 @@ class RegisterUserEntity {
     private final PasswordEncoder passwordEncoder;
     private final PasswordValidator passwordValidator;
 
-    private String externalId;
+    private String id;
     private final String username;
     private String password;
     private final RoleEnum role;
     private UserStatus status;
+    private ZonedDateTime creationDate;
 
     private RegisterUserEntity(RegisterUserRepository repository, PasswordEncoder passwordEncoder, PasswordValidator passwordValidator, String username, String password, RoleEnum role) {
         Objects.requireNonNull(repository, "RegisterUserRepository cannot be null");
@@ -55,6 +57,9 @@ class RegisterUserEntity {
         if (username.length() < 3) {
             throw new Exception("username cannot have less than 5 characters");
         }
+        if (username.length() > 30) {
+            throw new Exception("username cannot have more than 30 characters");
+        }
         if (repository.existsByUsername(username)) {
             throw new Exception("username already used");
         }
@@ -71,19 +76,20 @@ class RegisterUserEntity {
     }
 
     private void fillMissingValues() {
-        this.externalId = UUID.randomUUID().toString();
+        this.id = UUID.randomUUID().toString();
         this.password = passwordEncoder.encode(this.password);
         this.status = isPrivileged() ? UserStatus.PENDING : UserStatus.REGISTERED;
-
+        this.creationDate = ZonedDateTime.now();
     }
 
     private RegisterUserSnapshot toSnapshot() {
         return new RegisterUserSnapshot(
-                externalId,
+                id,
                 username,
                 password,
                 role,
-                status);
+                status,
+                creationDate);
     }
 
     private boolean isPrivileged() {

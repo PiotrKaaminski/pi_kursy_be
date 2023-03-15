@@ -6,6 +6,5 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-interface ChangePasswordJpaRepository extends JpaRepository<ChangePasswordOrmEntity, Long> {
-    Optional<ChangePasswordOrmEntity> findByExternalId(String externalId);
+interface ChangePasswordJpaRepository extends JpaRepository<ChangePasswordOrmEntity, String> {
 }

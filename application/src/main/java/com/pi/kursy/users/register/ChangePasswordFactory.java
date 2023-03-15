@@ -12,14 +12,13 @@ class ChangePasswordFactory {
     private final PasswordEncoder passwordEncoder;
 
     ChangePasswordEntity create(ChangePasswordDto dto) throws Exception {
-        var snapshot = repository.findByExternalId(dto.userId())
+        var snapshot = repository.findById(dto.userId())
                 .orElseThrow(() -> new Exception("user with id " + dto.userId() + " doesn't exist"));
 
         return new ChangePasswordEntity.Builder()
                 .passwordValidator(passwordValidator)
                 .passwordEncoder(passwordEncoder)
                 .id(snapshot.id())
-                .externalId(snapshot.externalId())
                 .password(snapshot.password())
                 .status(snapshot.status())
                 .oldPassword(dto.oldPassword())
