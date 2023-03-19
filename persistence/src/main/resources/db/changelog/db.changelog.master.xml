@@ -45,4 +45,31 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet id="5" author="PK">
+        <createTable tableName="courses" schemaName="${schema}">
+            <column name="id" type="varchar(128)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="courses_pk"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="float">
+                <constraints nullable="false"/>
+            </column>
+            <column name="teacher_id" type="varchar(128)">
+                <constraints nullable="false" foreignKeyName="fk_courses_teacher"
+                             referencedTableSchemaName="${schema}" references="users(id)"/>
+            </column>
+        </createTable>
+        <createTable tableName="course_category" schemaName="${schema}">
+            <column name="course_id" type="varchar(128)">
+                <constraints nullable="false" foreignKeyName="fk_course_category_course"
+                            referencedTableSchemaName="${schema}" references="courses(id)"/>
+            </column>
+            <column name="category_id" type="varchar(128)">
+                <constraints nullable="false" foreignKeyName="fk_course_category_category"
+                             referencedTableSchemaName="${schema}" references="categories(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>

@@ -35,6 +35,8 @@ class SecurityConfig {
                 .requestMatchers(HttpMethod.PATCH, "/users/password").authenticated()
                 // categories
                 .requestMatchers(HttpMethod.POST, "/categories").hasAuthority("ADMIN")
+                // courses
+                .requestMatchers(HttpMethod.POST, "/courses").hasAuthority("ADMIN")
                 .anyRequest().permitAll()
                 .and()
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);

@@ -31,7 +31,8 @@ podajemy dane użytkownika wraz z hasłem, po założeniu konta można się na n
 # TODO
 * poprawa obsługi błędów, zwracanie prawidłowych struktur
 
-* dodanie kursu wraz z przypisaniem do użytkownika TEACHER, admin nadaje nazwę kursu, cenę, kategorie i przypisuje teachera do kursu (admin)
+* pobranie listy kursów
+* admin może zmieniać tytuł, cenę, kategorie oraz nauczyciela kursu (osobne endpointy)
 * dodanie modyfikacji kursu, teacher nadaje opis 
-* dodanie sekcji do kursu (tytuł)
+* dodanie sekcji do kursu (tytuł, opis)
 * dodanie filmu do kursu
