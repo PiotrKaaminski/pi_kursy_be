@@ -1,4 +1,4 @@
-package com.pi.kursy.courses.add;
+package com.pi.kursy.courses.update;
 
 import com.pi.kursy.security.shared.RoleEnum;
 import org.springframework.util.StringUtils;
@@ -6,9 +6,9 @@ import org.springframework.util.StringUtils;
 import java.util.Set;
 import java.util.UUID;
 
-class AddCourseEntity {
+class UpdateCourseEntity {
 
-    private final AddCourseRepository repository;
+    private final UpdateCourseRepository repository;
 
     private String id;
     private String name;
@@ -16,21 +16,20 @@ class AddCourseEntity {
     private Set<String> categoryIds;
     private Teacher teacher;
 
-    AddCourseEntity(AddCourseRepository repository, String name, Float price, Set<String> categoryIds, Teacher teacher) {
+    UpdateCourseEntity(UpdateCourseRepository repository, String id, String name, Float price, Set<String> categoryIds, Teacher teacher) {
         this.repository = repository;
+        this.id = id;
         this.name = name;
         this.price = price;
         this.categoryIds = categoryIds;
         this.teacher = teacher;
     }
 
-    AddCourseSnapshot save() throws Exception {
+    UpdateCourseSnapshot save() throws Exception {
         validateName();
         validatePrice();
         validateCategoryIds();
         validateTeacher();
-
-        fillMissingFields();
 
         return toSnapshot();
     }
@@ -71,12 +70,9 @@ class AddCourseEntity {
         teacher.validate();
     }
 
-    private void fillMissingFields() {
-        this.id = UUID.randomUUID().toString();
-    }
 
-    private AddCourseSnapshot toSnapshot() {
-        return new AddCourseSnapshot(
+    private UpdateCourseSnapshot toSnapshot() {
+        return new UpdateCourseSnapshot(
                 id,
                 name,
                 price,
@@ -104,12 +100,12 @@ class AddCourseEntity {
             return !role.equals(RoleEnum.TEACHER);
         }
 
-        static Teacher fromSnapshot(AddCourseTeacherSnapshot snapshot) {
+        static Teacher fromSnapshot(UpdateCourseTeacherSnapshot snapshot) {
             return new Teacher(snapshot.id(), snapshot.role());
         }
 
-        private AddCourseTeacherSnapshot toSnapshot() {
-            return new AddCourseTeacherSnapshot(
+        private UpdateCourseTeacherSnapshot toSnapshot() {
+            return new UpdateCourseTeacherSnapshot(
                     id,
                     role
             );

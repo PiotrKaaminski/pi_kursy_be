@@ -41,6 +41,7 @@ class SecurityConfig {
                 // courses
                 .requestMatchers(HttpMethod.POST, "/courses").hasAuthority(RoleEnum.ADMIN.name())
                 .requestMatchers(HttpMethod.GET, "/courses").permitAll()
+                .requestMatchers(HttpMethod.PATCH, "/courses/*").hasAuthority(RoleEnum.ADMIN.name())
                 .anyRequest().permitAll()
                 .and()
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
