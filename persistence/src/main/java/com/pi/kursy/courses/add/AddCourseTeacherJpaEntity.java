@@ -11,7 +11,19 @@ class AddCourseTeacherJpaEntity {
     @Enumerated(EnumType.STRING)
     private RoleEnum role;
 
+    protected AddCourseTeacherJpaEntity() {
+    }
+
+    private AddCourseTeacherJpaEntity(String id, RoleEnum role) {
+        this.id = id;
+        this.role = role;
+    }
+
     AddCourseTeacherSnapshot toSnapshot() {
         return new AddCourseTeacherSnapshot(id, role);
+    }
+
+    static AddCourseTeacherJpaEntity fromSnapshot(AddCourseTeacherSnapshot snapshot) {
+        return new AddCourseTeacherJpaEntity(snapshot.id(), snapshot.role());
     }
 }

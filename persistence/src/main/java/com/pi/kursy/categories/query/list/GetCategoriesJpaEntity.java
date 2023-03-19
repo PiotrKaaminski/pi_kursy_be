@@ -6,7 +6,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "categories")
-class CategoryJpaEntity {
+class GetCategoriesJpaEntity {
     @Id
     private String id;
     private String name;

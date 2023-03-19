@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-interface GetCategoriesJpaRepository extends JpaRepository<CategoryJpaEntity, String> {
+interface GetCategoriesJpaRepository extends JpaRepository<GetCategoriesJpaEntity, String> {
 }

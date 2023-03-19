@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -14,6 +13,6 @@ class GetCategoriesRepositoryImpl implements GetCategoriesRepository {
 
     @Override
     public List<GetCategoriesEntryDto> getAll() {
-        return jpaRepository.findAll().stream().map(CategoryJpaEntity::toDto).toList();
+        return jpaRepository.findAll().stream().map(GetCategoriesJpaEntity::toDto).toList();
     }
 }

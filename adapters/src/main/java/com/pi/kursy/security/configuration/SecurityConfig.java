@@ -1,5 +1,6 @@
 package com.pi.kursy.security.configuration;
 
+import com.pi.kursy.security.shared.RoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,13 +31,16 @@ class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/authentication/refresh").permitAll()
                 .requestMatchers(HttpMethod.POST, "/authentication/logout").permitAll()
                 // users
-                .requestMatchers(HttpMethod.POST, "/users/privileged").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/users/privileged").hasAuthority(RoleEnum.ADMIN.name())
                 .requestMatchers(HttpMethod.POST, "/users/register").permitAll()
                 .requestMatchers(HttpMethod.PATCH, "/users/password").authenticated()
                 // categories
-                .requestMatchers(HttpMethod.POST, "/categories").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/categories").hasAuthority(RoleEnum.ADMIN.name())
+                .requestMatchers(HttpMethod.GET, "/categories").permitAll()
+
                 // courses
-                .requestMatchers(HttpMethod.POST, "/courses").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/courses").hasAuthority(RoleEnum.ADMIN.name())
+                .requestMatchers(HttpMethod.GET, "/courses").permitAll()
                 .anyRequest().permitAll()
                 .and()
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);

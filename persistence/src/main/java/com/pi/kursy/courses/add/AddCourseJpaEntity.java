@@ -1,6 +1,7 @@
 package com.pi.kursy.courses.add;
 
 import jakarta.persistence.*;
+import org.apache.commons.collections4.iterators.IteratorChain;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -19,16 +20,18 @@ class AddCourseJpaEntity {
             inverseJoinColumns = { @JoinColumn(name = "category_id") }
     )
     private Set<AddCourseCategoryJpaEntity> categoryIds;
-    private String teacherId;
+    @ManyToOne
+    @JoinColumn(name = "teacher_id")
+    private AddCourseTeacherJpaEntity teacher;
 
     protected AddCourseJpaEntity() {}
 
-    private AddCourseJpaEntity(String id, String name, Float price, Set<AddCourseCategoryJpaEntity> categoryIds, String teacherId) {
+    private AddCourseJpaEntity(String id, String name, Float price, Set<AddCourseCategoryJpaEntity> categoryIds, AddCourseTeacherJpaEntity teacher) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.categoryIds = categoryIds;
-        this.teacherId = teacherId;
+        this.teacher = teacher;
     }
 
     static AddCourseJpaEntity fromSnapshot(AddCourseSnapshot snapshot) {
@@ -37,7 +40,7 @@ class AddCourseJpaEntity {
                 snapshot.name(),
                 snapshot.price(),
                 snapshot.categoryIds().stream().map(AddCourseCategoryJpaEntity::fromSnapshot).collect(Collectors.toSet()),
-                snapshot.teacherId()
+                AddCourseTeacherJpaEntity.fromSnapshot(snapshot.teacher())
         );
     }
 }

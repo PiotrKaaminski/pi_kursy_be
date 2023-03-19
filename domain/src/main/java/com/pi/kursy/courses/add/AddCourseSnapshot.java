@@ -7,6 +7,6 @@ record AddCourseSnapshot(
         String name,
         Float price,
         Set<String> categoryIds,
-        String teacherId
+        AddCourseTeacherSnapshot teacher
 ) {
 }

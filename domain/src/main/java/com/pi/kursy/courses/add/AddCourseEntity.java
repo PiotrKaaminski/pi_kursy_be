@@ -1,7 +1,6 @@
 package com.pi.kursy.courses.add;
 
 import com.pi.kursy.security.shared.RoleEnum;
-import com.pi.kursy.users.shared.UserStatus;
 import org.springframework.util.StringUtils;
 
 import java.util.Set;
@@ -83,7 +82,7 @@ class AddCourseEntity {
                 name,
                 price,
                 categoryIds,
-                teacher.id
+                teacher.toSnapshot()
         );
     }
 
@@ -108,6 +107,13 @@ class AddCourseEntity {
 
         static Teacher fromSnapshot(AddCourseTeacherSnapshot snapshot) {
             return new Teacher(snapshot.id(), snapshot.role());
+        }
+
+        private AddCourseTeacherSnapshot toSnapshot() {
+            return new AddCourseTeacherSnapshot(
+                    id,
+                    role
+            );
         }
     }
 }
