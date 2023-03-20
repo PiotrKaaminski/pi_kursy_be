@@ -79,4 +79,24 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet id="7" author="PK">
+        <createTable tableName="sections" schemaName="${schema}">
+            <column name="id" type="varchar(128)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="sections_pk"/>
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="course_id" type="varchar(128)">
+                <constraints nullable="false" foreignKeyName="fk_section_course"
+                             referencedTableSchemaName="${schema}" references="courses(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="8" author="PK">
+        <renameColumn tableName="sections" oldColumnName="order" newColumnName="sequence" schemaName="${schema}"/>
+    </changeSet>
 </databaseChangeLog>

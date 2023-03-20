@@ -26,14 +26,17 @@ class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
+
                 // authentication
                 .requestMatchers(HttpMethod.POST, "/authentication/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/authentication/refresh").permitAll()
                 .requestMatchers(HttpMethod.POST, "/authentication/logout").permitAll()
+
                 // users
                 .requestMatchers(HttpMethod.POST, "/users/privileged").hasAuthority(RoleEnum.ADMIN.name())
                 .requestMatchers(HttpMethod.POST, "/users/register").permitAll()
                 .requestMatchers(HttpMethod.PATCH, "/users/password").authenticated()
+
                 // categories
                 .requestMatchers(HttpMethod.POST, "/categories").hasAuthority(RoleEnum.ADMIN.name())
                 .requestMatchers(HttpMethod.GET, "/categories").permitAll()
@@ -42,6 +45,10 @@ class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/courses").hasAuthority(RoleEnum.ADMIN.name())
                 .requestMatchers(HttpMethod.GET, "/courses").permitAll()
                 .requestMatchers(HttpMethod.PATCH, "/courses/*").hasAuthority(RoleEnum.ADMIN.name())
+
+                // sections
+                .requestMatchers(HttpMethod.POST, "/courses/*/sections").hasAuthority(RoleEnum.TEACHER.name())
+
                 .anyRequest().permitAll()
                 .and()
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
