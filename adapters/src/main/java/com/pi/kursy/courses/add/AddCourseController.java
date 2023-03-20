@@ -26,10 +26,11 @@ class AddCourseController {
             String name,
             Float price,
             Set<String> categoryIds,
-            String teacherId
+            String teacherId,
+            String description
     ) {
         AddCourseDto toDto() {
-            return new AddCourseDto(name, price, categoryIds, teacherId);
+            return new AddCourseDto(name, price, categoryIds, teacherId, description);
         }
     }
 

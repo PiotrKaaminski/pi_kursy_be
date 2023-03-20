@@ -22,10 +22,11 @@ class UpdateCourseController {
             String name,
             Float price,
             Set<String> categoryIds,
-            String teacherId
+            String teacherId,
+            String description
     ) {
         UpdateCourseDto toDto(String id) {
-            return new UpdateCourseDto(id, name, price, categoryIds, teacherId);
+            return new UpdateCourseDto(id, name, price, categoryIds, teacherId, description);
         }
     }
 

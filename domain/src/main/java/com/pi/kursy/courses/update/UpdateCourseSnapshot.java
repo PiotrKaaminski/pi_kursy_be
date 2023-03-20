@@ -7,6 +7,7 @@ record UpdateCourseSnapshot(
         String name,
         Float price,
         Set<String> categoryIds,
-        UpdateCourseTeacherSnapshot teacher
+        UpdateCourseTeacherSnapshot teacher,
+        String description
 ) {
 }

@@ -22,15 +22,17 @@ class UpdateCourseJpaEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "teacher_id")
     private UpdateCourseTeacherJpaEntity teacher;
+    private String description;
 
     protected UpdateCourseJpaEntity() {}
 
-    private UpdateCourseJpaEntity(String id, String name, Float price, Set<UpdateCourseCategoryJpaEntity> categoryIds, UpdateCourseTeacherJpaEntity teacher) {
+    private UpdateCourseJpaEntity(String id, String name, Float price, Set<UpdateCourseCategoryJpaEntity> categoryIds, UpdateCourseTeacherJpaEntity teacher, String description) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.categoryIds = categoryIds;
         this.teacher = teacher;
+        this.description = description;
     }
 
     static UpdateCourseJpaEntity fromSnapshot(UpdateCourseSnapshot snapshot) {
@@ -39,7 +41,8 @@ class UpdateCourseJpaEntity {
                 snapshot.name(),
                 snapshot.price(),
                 snapshot.categoryIds().stream().map(UpdateCourseCategoryJpaEntity::fromSnapshot).collect(Collectors.toSet()),
-                UpdateCourseTeacherJpaEntity.fromSnapshot(snapshot.teacher())
+                UpdateCourseTeacherJpaEntity.fromSnapshot(snapshot.teacher()),
+                snapshot.description()
         );
     }
 
@@ -49,7 +52,8 @@ class UpdateCourseJpaEntity {
                 name,
                 price,
                 categoryIds.stream().map(UpdateCourseCategoryJpaEntity::getId).collect(Collectors.toSet()),
-                teacher.toSnapshot()
+                teacher.toSnapshot(),
+                description
         );
     }
 }

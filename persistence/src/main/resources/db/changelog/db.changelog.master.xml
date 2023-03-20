@@ -72,4 +72,11 @@
             </column>
         </createTable>
     </changeSet>
+    <changeSet id="6" author="PK">
+        <addColumn tableName="courses" schemaName="${schema}">
+            <column name="description" type="text">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

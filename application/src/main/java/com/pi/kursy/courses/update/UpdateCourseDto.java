@@ -7,6 +7,7 @@ record UpdateCourseDto(
         String name,
         Float price,
         Set<String> categoryIds,
-        String teacherId
+        String teacherId,
+        String description
 ) {
 }

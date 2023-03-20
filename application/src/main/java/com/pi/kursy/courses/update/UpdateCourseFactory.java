@@ -23,7 +23,8 @@ class UpdateCourseFactory {
                 dto.name() == null ? snapshot.name() : dto.name(),
                 dto.price() == null ? snapshot.price() : dto.price(),
                 dto.categoryIds() == null ? snapshot.categoryIds() : dto.categoryIds(),
-                dto.teacherId() == null ? UpdateCourseEntity.Teacher.fromSnapshot(snapshot.teacher()) : findTeacher(dto.teacherId())
+                dto.teacherId() == null ? UpdateCourseEntity.Teacher.fromSnapshot(snapshot.teacher()) : findTeacher(dto.teacherId()),
+                dto.description() == null ? snapshot.description() : dto.description()
         );
     }
 

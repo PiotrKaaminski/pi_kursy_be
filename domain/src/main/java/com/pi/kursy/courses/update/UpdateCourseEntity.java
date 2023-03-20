@@ -15,14 +15,16 @@ class UpdateCourseEntity {
     private Float price;
     private Set<String> categoryIds;
     private Teacher teacher;
+    private String description;
 
-    UpdateCourseEntity(UpdateCourseRepository repository, String id, String name, Float price, Set<String> categoryIds, Teacher teacher) {
+    UpdateCourseEntity(UpdateCourseRepository repository, String id, String name, Float price, Set<String> categoryIds, Teacher teacher, String description) {
         this.repository = repository;
         this.id = id;
         this.name = name;
         this.price = price;
         this.categoryIds = categoryIds;
         this.teacher = teacher;
+        this.description = description;
     }
 
     UpdateCourseSnapshot save() throws Exception {
@@ -30,6 +32,7 @@ class UpdateCourseEntity {
         validatePrice();
         validateCategoryIds();
         validateTeacher();
+        validateDescription();
 
         return toSnapshot();
     }
@@ -69,6 +72,14 @@ class UpdateCourseEntity {
     private void validateTeacher() throws Exception {
         teacher.validate();
     }
+    private void validateDescription() throws Exception {
+        if (!StringUtils.hasText(description)) {
+            throw new Exception("Description cannot be empty");
+        }
+        if (description.length() < 10) {
+            throw new Exception("Description cannot be shorter than 10 characters");
+        }
+    }
 
 
     private UpdateCourseSnapshot toSnapshot() {
@@ -77,7 +88,8 @@ class UpdateCourseEntity {
                 name,
                 price,
                 categoryIds,
-                teacher.toSnapshot()
+                teacher.toSnapshot(),
+                description
         );
     }
 

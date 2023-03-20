@@ -23,15 +23,17 @@ class AddCourseJpaEntity {
     @ManyToOne
     @JoinColumn(name = "teacher_id")
     private AddCourseTeacherJpaEntity teacher;
+    private String description;
 
     protected AddCourseJpaEntity() {}
 
-    private AddCourseJpaEntity(String id, String name, Float price, Set<AddCourseCategoryJpaEntity> categoryIds, AddCourseTeacherJpaEntity teacher) {
+    private AddCourseJpaEntity(String id, String name, Float price, Set<AddCourseCategoryJpaEntity> categoryIds, AddCourseTeacherJpaEntity teacher, String description) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.categoryIds = categoryIds;
         this.teacher = teacher;
+        this.description = description;
     }
 
     static AddCourseJpaEntity fromSnapshot(AddCourseSnapshot snapshot) {
@@ -40,7 +42,8 @@ class AddCourseJpaEntity {
                 snapshot.name(),
                 snapshot.price(),
                 snapshot.categoryIds().stream().map(AddCourseCategoryJpaEntity::fromSnapshot).collect(Collectors.toSet()),
-                AddCourseTeacherJpaEntity.fromSnapshot(snapshot.teacher())
+                AddCourseTeacherJpaEntity.fromSnapshot(snapshot.teacher()),
+                snapshot.description()
         );
     }
 }

@@ -15,13 +15,15 @@ class AddCourseEntity {
     private Float price;
     private Set<String> categoryIds;
     private Teacher teacher;
+    private String description;
 
-    AddCourseEntity(AddCourseRepository repository, String name, Float price, Set<String> categoryIds, Teacher teacher) {
+    AddCourseEntity(AddCourseRepository repository, String name, Float price, Set<String> categoryIds, Teacher teacher, String description) {
         this.repository = repository;
         this.name = name;
         this.price = price;
         this.categoryIds = categoryIds;
         this.teacher = teacher;
+        this.description = description;
     }
 
     AddCourseSnapshot save() throws Exception {
@@ -29,6 +31,7 @@ class AddCourseEntity {
         validatePrice();
         validateCategoryIds();
         validateTeacher();
+        validateDescription();
 
         fillMissingFields();
 
@@ -70,6 +73,14 @@ class AddCourseEntity {
     private void validateTeacher() throws Exception {
         teacher.validate();
     }
+    private void validateDescription() throws Exception {
+        if (!StringUtils.hasText(description)) {
+            throw new Exception("Description cannot be empty");
+        }
+        if (description.length() < 10) {
+            throw new Exception("Description cannot be shorter than 10 characters");
+        }
+    }
 
     private void fillMissingFields() {
         this.id = UUID.randomUUID().toString();
@@ -81,7 +92,8 @@ class AddCourseEntity {
                 name,
                 price,
                 categoryIds,
-                teacher.toSnapshot()
+                teacher.toSnapshot(),
+                description
         );
     }
 

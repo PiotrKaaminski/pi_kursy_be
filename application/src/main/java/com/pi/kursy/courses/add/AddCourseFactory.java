@@ -15,7 +15,8 @@ class AddCourseFactory {
                 dto.name(),
                 dto.price(),
                 dto.categoryIds(),
-                getTeacher(dto.teacherId())
+                getTeacher(dto.teacherId()),
+                dto.description()
         );
     }
 
