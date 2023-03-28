@@ -30,6 +30,7 @@ podajemy dane użytkownika wraz z hasłem, po założeniu konta można się na n
 * dostęp do zawartości wykupionych kursów
 # TODO
 * poprawa obsługi błędów, zwracanie prawidłowych struktur
+* uprzywilejowany użytkownik na statusie PENDING ma uprawnienia jedynie do zmiany hasła
 
 * admin może zmieniać tytuł, cenę, kategorie oraz nauczyciela kursu (patch, aktualizowane są tylko wartości nie nullowe)
 * dodanie modyfikacji kursu, teacher nadaje opis 
