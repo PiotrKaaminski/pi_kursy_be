@@ -12,7 +12,8 @@ class AddSectionFactory {
     AddSectionEntity create(AddSectionDto dto) throws Exception {
         return new AddSectionEntity(
                 dto.title(),
-                findCourse(dto.courseId())
+                findCourse(dto.courseId()),
+                dto.creatorId()
         );
     }
 
@@ -21,4 +22,5 @@ class AddSectionFactory {
                 .map(AddSectionEntity.Course::fromSnapshot)
                 .orElseThrow(() -> new Exception("Course with id " + courseId + " doesn't exist"));
     }
+
 }

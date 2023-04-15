@@ -11,14 +11,16 @@ class AddSectionEntity {
     private Integer sequence;
 
     private final Course course;
+    private final String creatorId;
 
-    AddSectionEntity(String title, Course course) {
+    AddSectionEntity(String title, Course course, String creatorId) {
         this.title = title;
         this.course = course;
+        this.creatorId = creatorId;
     }
 
     AddSectionSnapshot save() throws Exception {
-        // todo validate if teacher adding this section is owner of this course
+        // todo validate if creator is owner of course
         validateName();
 
         fillMissingFields();
@@ -55,19 +57,22 @@ class AddSectionEntity {
     static class Course {
         private final String id;
         private final Integer sectionsCount;
+        private final String ownerId;
 
-        private Course(String id, Integer sectionsCount) {
+        private Course(String id, Integer sectionsCount, String ownerId) {
             this.id = id;
             this.sectionsCount = sectionsCount;
+            this.ownerId = ownerId;
         }
 
         static Course fromSnapshot(AddSectionCourseSnapshot snapshot) {
-            return new Course(snapshot.id(), snapshot.sectionsCount());
+            return new Course(snapshot.id(), snapshot.sectionsCount(), snapshot.ownerId());
         }
 
         AddSectionCourseSnapshot toSnapshot() {
-            return new AddSectionCourseSnapshot(id, sectionsCount);
+            return new AddSectionCourseSnapshot(id, sectionsCount, ownerId);
         }
 
     }
+
 }
