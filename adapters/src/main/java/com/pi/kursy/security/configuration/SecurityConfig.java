@@ -33,7 +33,6 @@ class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/authentication/logout").permitAll()
 
                 // users
-                .requestMatchers(HttpMethod.POST, "/users/privileged").hasAuthority(RoleEnum.ADMIN.name())
                 .requestMatchers(HttpMethod.POST, "/users/register").permitAll()
                 .requestMatchers(HttpMethod.PATCH, "/users/password").authenticated()
 
@@ -44,6 +43,7 @@ class SecurityConfig {
                 // courses
                 .requestMatchers(HttpMethod.POST, "/courses").hasAuthority(RoleEnum.ADMIN.name())
                 .requestMatchers(HttpMethod.GET, "/courses").permitAll()
+                .requestMatchers(HttpMethod.GET, "/courses/*").permitAll()
                 .requestMatchers(HttpMethod.PATCH, "/courses/*").hasAuthority(RoleEnum.ADMIN.name())
 
                 // sections

@@ -1,4 +1,4 @@
-package com.pi.kursy.courses.query.list;
+package com.pi.kursy.courses.query.single;
 
 import jakarta.persistence.*;
 
@@ -7,11 +7,12 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "courses")
-class GetCoursesJpaEntity {
+class GetCourseJpaEntity {
     @Id
     private String id;
     private String name;
     private Float price;
+    private String description;
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
@@ -23,13 +24,19 @@ class GetCoursesJpaEntity {
     )
     private Set<Category> categories;
 
-    GetCoursesEntryDto toDto() {
-        return new GetCoursesEntryDto(
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "course_id")
+    private Set<Section> sections;
+
+    GetCourseResponseDto toDto() {
+        return new GetCourseResponseDto(
                 id,
                 name,
                 price,
+                description,
                 teacher.toDto(),
-                categories.stream().map(Category::toDto).toList()
+                categories.stream().map(Category::toDto).toList(),
+                sections.stream().map(Section::toDto).toList()
         );
     }
 
@@ -41,13 +48,12 @@ class GetCoursesJpaEntity {
         private String id;
         private String username;
 
-        private GetCoursesEntryDto.Teacher toDto() {
-            return new GetCoursesEntryDto.Teacher(
+        private GetCourseResponseDto.Teacher toDto() {
+            return new GetCourseResponseDto.Teacher(
                     id,
                     username
             );
         }
-
     }
 
     @Entity
@@ -57,10 +63,27 @@ class GetCoursesJpaEntity {
         private String id;
         private String name;
 
-        private GetCoursesEntryDto.Category toDto() {
-            return new GetCoursesEntryDto.Category(
+        private GetCourseResponseDto.Category toDto() {
+            return new GetCourseResponseDto.Category(
                     id,
                     name
+            );
+        }
+    }
+
+    @Entity
+    @Table(name = "sections")
+    private static class Section {
+        @Id
+        private String id;
+        private String title;
+        private Integer sequence;
+
+        private GetCourseResponseDto.Section toDto() {
+            return new GetCourseResponseDto.Section(
+                    id,
+                    title,
+                    sequence
             );
         }
     }

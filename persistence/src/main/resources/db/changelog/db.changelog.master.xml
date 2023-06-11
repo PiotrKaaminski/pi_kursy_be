@@ -23,19 +23,12 @@
     </changeSet>
     <changeSet id="2" author="PK">
         <addColumn tableName="users" schemaName="${schema}">
-            <column name="status" type="varchar(64)">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-    <changeSet id="3" author="PK">
-        <addColumn tableName="users" schemaName="${schema}">
             <column name="creation_date" type="timestamp">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
-    <changeSet id="4" author="PK">
+    <changeSet id="3" author="PK">
         <createTable tableName="categories" schemaName="${schema}">
             <column name="id" type="varchar(128)">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="categories_pk"/>
@@ -45,7 +38,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="5" author="PK">
+    <changeSet id="4" author="PK">
         <createTable tableName="courses" schemaName="${schema}">
             <column name="id" type="varchar(128)">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="courses_pk"/>
@@ -72,14 +65,14 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="6" author="PK">
+    <changeSet id="5" author="PK">
         <addColumn tableName="courses" schemaName="${schema}">
             <column name="description" type="text">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
     </changeSet>
-    <changeSet id="7" author="PK">
+    <changeSet id="6" author="PK">
         <createTable tableName="sections" schemaName="${schema}">
             <column name="id" type="varchar(128)">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="sections_pk"/>
@@ -96,7 +89,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="8" author="PK">
+    <changeSet id="7" author="PK">
         <renameColumn tableName="sections" oldColumnName="order" newColumnName="sequence" schemaName="${schema}"/>
     </changeSet>
 </databaseChangeLog>

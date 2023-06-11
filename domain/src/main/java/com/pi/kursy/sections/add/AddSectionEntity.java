@@ -21,11 +21,18 @@ class AddSectionEntity {
 
     AddSectionSnapshot save() throws Exception {
         // todo validate if creator is owner of course
+        validateCreator();
         validateName();
 
         fillMissingFields();
 
         return toSnapshot();
+    }
+
+    private void validateCreator() throws Exception {
+        if (!creatorId.equals(course.ownerId)) {
+            throw new Exception("User is not the owner of this course");
+        }
     }
 
     private void validateName() throws Exception {

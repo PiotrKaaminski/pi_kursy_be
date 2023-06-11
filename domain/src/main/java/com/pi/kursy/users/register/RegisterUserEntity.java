@@ -1,17 +1,14 @@
 package com.pi.kursy.users.register;
 
 import com.pi.kursy.security.shared.RoleEnum;
-import com.pi.kursy.users.shared.UserStatus;
 import org.springframework.util.StringUtils;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 class RegisterUserEntity {
 
-    private static final List<RoleEnum> PRIVILEGED_ROLES = List.of(RoleEnum.ADMIN, RoleEnum.TEACHER);
 
     private final RegisterUserRepository repository;
     private final PasswordEncoder passwordEncoder;
@@ -21,7 +18,6 @@ class RegisterUserEntity {
     private final String username;
     private String password;
     private final RoleEnum role;
-    private UserStatus status;
     private ZonedDateTime creationDate;
 
     private RegisterUserEntity(RegisterUserRepository repository, PasswordEncoder passwordEncoder, PasswordValidator passwordValidator, String username, String password, RoleEnum role) {
@@ -78,7 +74,6 @@ class RegisterUserEntity {
     private void fillMissingValues() {
         this.id = UUID.randomUUID().toString();
         this.password = passwordEncoder.encode(this.password);
-        this.status = isPrivileged() ? UserStatus.PENDING : UserStatus.REGISTERED;
         this.creationDate = ZonedDateTime.now();
     }
 
@@ -88,12 +83,7 @@ class RegisterUserEntity {
                 username,
                 password,
                 role,
-                status,
                 creationDate);
-    }
-
-    private boolean isPrivileged() {
-        return PRIVILEGED_ROLES.contains(role);
     }
 
     static class Builder {

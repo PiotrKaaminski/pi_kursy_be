@@ -20,7 +20,6 @@ class ChangePasswordFactory {
                 .passwordEncoder(passwordEncoder)
                 .id(snapshot.id())
                 .password(snapshot.password())
-                .status(snapshot.status())
                 .oldPassword(dto.oldPassword())
                 .newPassword(dto.newPassword()).build();
     }

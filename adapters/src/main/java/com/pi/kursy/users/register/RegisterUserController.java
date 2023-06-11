@@ -21,12 +21,6 @@ class RegisterUserController {
         return RegisterUserResponse.fromDto(responseDto);
     }
 
-    @PostMapping("privileged")
-    RegisterUserResponse registerPrivilegedUser(@RequestBody RegisterPrivilegedUserRequest request) throws Exception {
-        var responseDto = registerUserFacade.registerUser(request.toDto());
-        return RegisterUserResponse.fromDto(responseDto);
-    }
-
     @PatchMapping("password")
     void modifyPassword(
             @RequestBody ChangePasswordRequest request, UsernamePasswordAuthenticationToken authToken) throws Exception {
@@ -34,35 +28,26 @@ class RegisterUserController {
         changePasswordFacade.changePassword(request.toDto(userId));
     }
 
-    record RegisterUserRequest(String username,String password) {
+    record RegisterUserRequest(String username,String password, Role role) {
         RegisterUserDto toDto() {
             return new RegisterUserDto(
                     username,
                     password,
-                    RoleEnum.STUDENT
+                    role.getRole()
             );
         }
-    }
 
-    record RegisterPrivilegedUserRequest(String username, String password, PrivilegedUserRole role) {
-        RegisterUserDto toDto() {
-            return new RegisterUserDto(
-            username,
-            password,
-            role == null ? null : role.getRole()
-            );
-        }
-    }
+        enum Role {
+            ADMIN(RoleEnum.ADMIN),
+            TEACHER(RoleEnum.TEACHER),
+            STUDENT(RoleEnum.STUDENT);
 
-    enum PrivilegedUserRole {
-        ADMIN(RoleEnum.ADMIN),
-        TEACHER(RoleEnum.TEACHER);
+            @Getter
+            private final RoleEnum role;
 
-        @Getter
-        private final RoleEnum role;
-
-        PrivilegedUserRole(RoleEnum role) {
-            this.role = role;
+            Role(RoleEnum role) {
+                this.role = role;
+            }
         }
     }
 
