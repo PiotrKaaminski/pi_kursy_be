@@ -5,15 +5,15 @@ import org.springframework.data.annotation.PersistenceCreator;
 
 @Entity
 @Table(name = "users")
-class ChangePasswordOrmEntity {
+class ChangePasswordJpaEntity {
     @Id
     private String id;
     private String password;
 
     @PersistenceCreator
-    protected ChangePasswordOrmEntity() {}
+    protected ChangePasswordJpaEntity() {}
 
-    private ChangePasswordOrmEntity(String id, String password) {
+    private ChangePasswordJpaEntity(String id, String password) {
         this.id = id;
         this.password = password;
     }
@@ -25,8 +25,8 @@ class ChangePasswordOrmEntity {
         );
     }
 
-    static ChangePasswordOrmEntity fromSnapshot(ChangePasswordSnapshot snapshot) {
-        return new ChangePasswordOrmEntity(
+    static ChangePasswordJpaEntity fromSnapshot(ChangePasswordSnapshot snapshot) {
+        return new ChangePasswordJpaEntity(
                 snapshot.id(),
                 snapshot.password()
         );

@@ -43,6 +43,7 @@ class SecurityConfig {
                 // courses
                 .requestMatchers(HttpMethod.POST, "/courses").hasAuthority(RoleEnum.ADMIN.name())
                 .requestMatchers(HttpMethod.GET, "/courses").permitAll()
+                .requestMatchers(HttpMethod.GET, "/courses/*/buy").authenticated()
                 .requestMatchers(HttpMethod.GET, "/courses/*").permitAll()
                 .requestMatchers(HttpMethod.PATCH, "/courses/*").hasAuthority(RoleEnum.ADMIN.name())
 

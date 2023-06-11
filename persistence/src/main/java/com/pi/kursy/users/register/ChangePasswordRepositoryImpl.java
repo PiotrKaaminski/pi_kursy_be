@@ -13,11 +13,11 @@ class ChangePasswordRepositoryImpl implements ChangePasswordRepository {
 
     @Override
     public Optional<ChangePasswordSnapshot> findById(String id) {
-        return jpaRepository.findById(id).map(ChangePasswordOrmEntity::toSnapshot);
+        return jpaRepository.findById(id).map(ChangePasswordJpaEntity::toSnapshot);
     }
 
     @Override
     public void update(ChangePasswordSnapshot snapshot) {
-        jpaRepository.save(ChangePasswordOrmEntity.fromSnapshot(snapshot));
+        jpaRepository.save(ChangePasswordJpaEntity.fromSnapshot(snapshot));
     }
 }

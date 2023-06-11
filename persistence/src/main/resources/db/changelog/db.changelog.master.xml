@@ -92,4 +92,19 @@
     <changeSet id="7" author="PK">
         <renameColumn tableName="sections" oldColumnName="order" newColumnName="sequence" schemaName="${schema}"/>
     </changeSet>
+    <changeSet id="8" author="PK">
+        <createTable tableName="user_course_access" schemaName="${schema}">
+            <column name="id" type="varchar(128)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="user_course_access_pk"/>
+            </column>
+            <column name="user_id" type="varchar(128)">
+                <constraints nullable="false" foreignKeyName="fk_user_course_access_user"
+                    referencedTableSchemaName="${schema}" references="users(id)"/>
+            </column>
+            <column name="course_id" type="varchar(128)">
+                <constraints nullable="false" foreignKeyName="fk_user_course_access_course"
+                             referencedTableSchemaName="${schema}" references="courses(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
