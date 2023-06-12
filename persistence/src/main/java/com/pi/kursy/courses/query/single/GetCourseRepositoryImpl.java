@@ -12,8 +12,13 @@ class GetCourseRepositoryImpl implements GetCourseRepository {
     private final GetCourseJpaRepository repository;
 
     @Override
-    public Optional<GetCourseResponseDto> findById(String id) {
+    public Optional<GetCourseSnapshot> findById(String id) {
         return repository.findById(id)
-                .map(GetCourseJpaEntity::toDto);
+                .map(GetCourseJpaEntity::toSnapshot);
+    }
+
+    @Override
+    public boolean userHasAccess(String courseId, String userId) {
+        return repository.existsByIdAndUsersWithAccess_Id(courseId, userId);
     }
 }

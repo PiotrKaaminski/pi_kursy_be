@@ -2,12 +2,11 @@ package com.pi.kursy.courses.query.single;
 
 import java.util.List;
 
-record GetCourseResponseDto(
+record GetCourseSnapshot(
         String id,
         String name,
         Float price,
         String description,
-        Boolean hasAccess,
         Teacher teacher,
         List<Category> categories,
         List<Section> sections

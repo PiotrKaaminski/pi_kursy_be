@@ -3,7 +3,6 @@ package com.pi.kursy.courses.query.single;
 import jakarta.persistence.*;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "courses")
@@ -15,7 +14,14 @@ class GetCourseJpaEntity {
     private String description;
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "teacher_id")
-    private Teacher teacher;
+    private User user;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_course_access",
+            joinColumns = { @JoinColumn(name = "course_id") },
+            inverseJoinColumns = { @JoinColumn(name = "user_id") }
+    )
+    private Set<User> usersWithAccess;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "course_category",
@@ -28,13 +34,13 @@ class GetCourseJpaEntity {
     @JoinColumn(name = "course_id")
     private Set<Section> sections;
 
-    GetCourseResponseDto toDto() {
-        return new GetCourseResponseDto(
+    GetCourseSnapshot toSnapshot() {
+        return new GetCourseSnapshot(
                 id,
                 name,
                 price,
                 description,
-                teacher.toDto(),
+                user.toDto(),
                 categories.stream().map(Category::toDto).toList(),
                 sections.stream().map(Section::toDto).toList()
         );
@@ -43,13 +49,13 @@ class GetCourseJpaEntity {
 
     @Entity
     @Table(name = "users")
-    private static class Teacher {
+    private static class User {
         @Id
         private String id;
         private String username;
 
-        private GetCourseResponseDto.Teacher toDto() {
-            return new GetCourseResponseDto.Teacher(
+        private GetCourseSnapshot.Teacher toDto() {
+            return new GetCourseSnapshot.Teacher(
                     id,
                     username
             );
@@ -63,8 +69,8 @@ class GetCourseJpaEntity {
         private String id;
         private String name;
 
-        private GetCourseResponseDto.Category toDto() {
-            return new GetCourseResponseDto.Category(
+        private GetCourseSnapshot.Category toDto() {
+            return new GetCourseSnapshot.Category(
                     id,
                     name
             );
@@ -79,8 +85,8 @@ class GetCourseJpaEntity {
         private String title;
         private Integer sequence;
 
-        private GetCourseResponseDto.Section toDto() {
-            return new GetCourseResponseDto.Section(
+        private GetCourseSnapshot.Section toDto() {
+            return new GetCourseSnapshot.Section(
                     id,
                     title,
                     sequence

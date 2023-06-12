@@ -5,4 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 interface GetCourseJpaRepository extends JpaRepository<GetCourseJpaEntity, String> {
+    boolean existsByIdAndUsersWithAccess_Id(String courseId, String userId);
 }
