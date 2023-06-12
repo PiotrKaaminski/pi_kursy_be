@@ -9,7 +9,7 @@ class GetCoursesFacade {
 
     private final GetCoursesRepository repository;
 
-    GetCoursesResponseDto getCourses() {
-        return new GetCoursesResponseDto(repository.getAll());
+    GetCoursesResponseDto getCourses(GetCoursesFilters filters) {
+        return new GetCoursesResponseDto(repository.getAll(filters));
     }
 }

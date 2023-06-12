@@ -3,6 +3,7 @@ package com.pi.kursy.courses.query.list;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -16,11 +17,10 @@ class GetCoursesController {
     private final GetCoursesFacade facade;
 
     @GetMapping
-    GetCoursesResponse getCourses() {
-        var responseDto = facade.getCourses();
+    GetCoursesResponse getCourses(GetCoursesFilters filters) {
+        var responseDto = facade.getCourses(filters);
         return GetCoursesResponse.fromDto(responseDto);
     }
-
 
     record GetCoursesResponse(
             List<GetCoursesEntry> rows
