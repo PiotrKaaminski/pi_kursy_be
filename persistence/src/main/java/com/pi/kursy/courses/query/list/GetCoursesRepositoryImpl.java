@@ -17,11 +17,13 @@ class GetCoursesRepositoryImpl implements GetCoursesRepository {
     private final GetCoursesJpaRepository repository;
 
     @Override
-    public List<GetCoursesEntryDto> getAll(GetCoursesFilters filters) {
-        return repository.findAll(getSpecification(filters), getPagination(filters))
-                .stream()
-                .map(GetCoursesJpaEntity::toDto)
-                .collect(Collectors.toList());
+    public GetCoursesResponseDto getAll(GetCoursesFilters filters) {
+        var page =  repository.findAll(getSpecification(filters), getPagination(filters));
+
+        return new GetCoursesResponseDto(
+                page.get().map(GetCoursesJpaEntity::toDto).toList(),
+                page.getTotalElements()
+        );
     }
 
     private Specification<GetCoursesJpaEntity> getSpecification(GetCoursesFilters filters) {

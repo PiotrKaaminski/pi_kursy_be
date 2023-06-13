@@ -23,11 +23,14 @@ class GetCoursesController {
     }
 
     record GetCoursesResponse(
-            List<GetCoursesEntry> rows
+            List<GetCoursesEntry> rows,
+            Long count
     ) {
         static GetCoursesResponse fromDto(GetCoursesResponseDto dto) {
-            var entries = dto.rows().stream().map(GetCoursesEntry::fromDto).toList();
-            return new GetCoursesResponse(entries);
+            return new GetCoursesResponse(
+                    dto.rows().stream().map(GetCoursesEntry::fromDto).toList(),
+                    dto.count()
+            );
         }
     }
 
