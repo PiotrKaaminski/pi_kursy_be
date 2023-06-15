@@ -2,8 +2,12 @@ package com.pi.kursy.users.register;
 
 import com.pi.kursy.security.configuration.UserDetailsServiceImpl;
 import com.pi.kursy.security.shared.RoleEnum;
+import com.pi.kursy.shared.ErrorResponse;
+import com.pi.kursy.shared.GenericException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,16 +20,24 @@ class RegisterUserController {
     private final ChangePasswordFacade changePasswordFacade;
 
     @PostMapping("register")
-    RegisterUserResponse register(@RequestBody RegisterUserRequest request) throws Exception {
+    RegisterUserResponse register(@RequestBody RegisterUserRequest request) throws RegisterUserEntity.UserValidationException {
         var responseDto = registerUserFacade.registerUser(request.toDto());
         return RegisterUserResponse.fromDto(responseDto);
     }
 
     @PatchMapping("password")
     void modifyPassword(
-            @RequestBody ChangePasswordRequest request, UsernamePasswordAuthenticationToken authToken) throws Exception {
+            @RequestBody ChangePasswordRequest request,
+            UsernamePasswordAuthenticationToken authToken) throws ChangePasswordFactory.CreateEntityException, ChangePasswordEntity.ChangePasswordException {
         var userId = ((UserDetailsServiceImpl.UserPrincipal) authToken.getPrincipal()).getId();
         changePasswordFacade.changePassword(request.toDto(userId));
+    }
+
+    @ExceptionHandler(GenericException.class)
+    ResponseEntity<ErrorResponse> handleError(GenericException error) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                ErrorResponse.fromGenericException(error)
+        );
     }
 
     record RegisterUserRequest(String username,String password, Role role) {

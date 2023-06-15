@@ -3,6 +3,7 @@ package com.pi.kursy.security.authentication.login;
 import com.pi.kursy.security.authentication.logout.LogoutFacade;
 import com.pi.kursy.security.jwt.JwtToken;
 import com.pi.kursy.security.jwt.JwtTokenFactory;
+import com.pi.kursy.shared.GenericException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ class LoginFacade {
         try {
             authenticationManager.authenticate(dto);
         } catch (AuthenticationManager.AuthenticationException e) {
-            throw new LoginException(e);
+            throw new LoginException();
         }
 
         var userSnapshot = repository.findByUsername(dto.username()).orElseThrow(LoginException::new);
@@ -34,18 +35,17 @@ class LoginFacade {
         return new LoginResponseDto(jwtToken.getEncodedToken());
     }
 
-    static class LoginException extends Exception {
+    static class LoginException extends GenericException {
 
-        @Getter
         private final LoginStatus status;
 
         LoginException() {
-            this(null);
+            super("Cannot authenticate user");
+            this.status = LoginStatus.FORBIDDEN;
         }
 
-        LoginException(Throwable cause) {
-            super("Cannot authenticate user", cause);
-            this.status = LoginStatus.FORBIDDEN;
+        public String getStatus() {
+            return status.name();
         }
 
         enum LoginStatus {

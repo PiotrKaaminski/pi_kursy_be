@@ -1,5 +1,7 @@
 package com.pi.kursy.categories.add;
 
+import com.pi.kursy.shared.GenericException;
+import lombok.Getter;
 import org.springframework.util.StringUtils;
 
 import java.util.UUID;
@@ -16,22 +18,22 @@ class AddCategoryEntity {
         this.name = name;
     }
 
-    AddCategorySnapshot save() throws Exception {
+    AddCategorySnapshot save() throws CategoryValidationError {
         validateName();
         fillMissingValues();
 
         return toSnapshot();
     }
 
-    private void validateName() throws Exception {
+    private void validateName() throws CategoryValidationError {
         if (!StringUtils.hasText(name)) {
-            throw new Exception("category name cannot be empty");
+            throw new CategoryValidationError("category name cannot be empty", CategoryValidationError.Status.NAME_EMPTY);
         }
         if (name.length() > 50) {
-            throw new Exception("category name cannot be longer than 50 characters");
+            throw new CategoryValidationError("category name cannot be longer than 50 characters", CategoryValidationError.Status.NAME_TOO_LONG);
         }
         if (repository.existsByName(name)) {
-            throw new Exception("category with the same name already exists");
+            throw new CategoryValidationError("category with the same name already exists", CategoryValidationError.Status.NAME_NOT_UNIQUE);
         }
     }
     private void fillMissingValues() {
@@ -58,6 +60,27 @@ class AddCategoryEntity {
 
         AddCategoryEntity build() {
             return new AddCategoryEntity(repository, name);
+        }
+    }
+
+    static class CategoryValidationError extends GenericException {
+
+        private final Status status;
+
+        CategoryValidationError(String message, Status status) {
+            super(message);
+            this.status = status;
+        }
+
+        @Override
+        public String getStatus() {
+            return status.name();
+        }
+
+        enum Status {
+            NAME_EMPTY,
+            NAME_TOO_LONG,
+            NAME_NOT_UNIQUE
         }
     }
 }

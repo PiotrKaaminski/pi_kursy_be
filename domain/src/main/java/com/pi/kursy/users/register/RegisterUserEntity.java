@@ -1,6 +1,7 @@
 package com.pi.kursy.users.register;
 
 import com.pi.kursy.security.shared.RoleEnum;
+import com.pi.kursy.shared.GenericException;
 import org.springframework.util.StringUtils;
 
 import java.time.ZonedDateTime;
@@ -33,7 +34,7 @@ class RegisterUserEntity {
         this.role = role;
     }
 
-    RegisterUserSnapshot register() throws Exception {
+    RegisterUserSnapshot register() throws UserValidationException {
         validateUsername();
         validatePassword();
         validateRole();
@@ -43,31 +44,31 @@ class RegisterUserEntity {
         return toSnapshot();
     }
 
-    private void validateUsername() throws Exception {
+    private void validateUsername() throws UserValidationException {
         if (!StringUtils.hasText(username)) {
-            throw new Exception("username cannot be empty");
+            throw new UserValidationException("username cannot be empty", UserValidationException.Status.USERNAME_EMPTY);
         }
         if (StringUtils.containsWhitespace(username)) {
-            throw new Exception("username cannot contain whitespace");
+            throw new UserValidationException("username cannot contain whitespace", UserValidationException.Status.USERNAME_CONTAINS_WHITESPACE);
         }
         if (username.length() < 3) {
-            throw new Exception("username cannot have less than 5 characters");
+            throw new UserValidationException("username cannot have less than 5 characters", UserValidationException.Status.USERNAME_TOO_SHORT);
         }
         if (username.length() > 30) {
-            throw new Exception("username cannot have more than 30 characters");
+            throw new UserValidationException("username cannot have more than 30 characters", UserValidationException.Status.USERNAME_TOO_LONG);
         }
         if (repository.existsByUsername(username)) {
-            throw new Exception("username already used");
+            throw new UserValidationException("username already used", UserValidationException.Status.USERNAME_NON_UNIQUE);
         }
     }
-    private void validatePassword() throws Exception {
+    private void validatePassword() throws UserValidationException {
         if (passwordValidator.isInvalid(password)) {
-            throw new Exception("password is invalid");
+            throw new UserValidationException("password is invalid", UserValidationException.Status.PASSWORD_INVALID);
         }
     }
-    private void validateRole() throws Exception {
+    private void validateRole() throws UserValidationException {
         if (role == null) {
-            throw new Exception("role cannot be empty");
+            throw new UserValidationException("role cannot be empty", UserValidationException.Status.ROLE_EMPTY);
         }
     }
 
@@ -129,4 +130,26 @@ class RegisterUserEntity {
             return new RegisterUserEntity(repository, passwordEncoder, passwordValidator, username, password, role);
         }
     }
+
+    static class UserValidationException extends GenericException {
+
+        private final Status status;
+
+        UserValidationException(String message, Status status) {
+            super(message);
+            this.status = status;
+        }
+
+        public String getStatus() {
+            return status.name();
+        }
+
+        enum Status {
+            USERNAME_EMPTY, USERNAME_CONTAINS_WHITESPACE, USERNAME_TOO_SHORT, USERNAME_TOO_LONG, USERNAME_NON_UNIQUE,
+            PASSWORD_INVALID,
+            ROLE_EMPTY
+
+        }
+    }
+
 }

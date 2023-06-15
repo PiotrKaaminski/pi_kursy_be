@@ -10,7 +10,7 @@ class UpdateCourseFacade {
     private final UpdateCourseRepository repository;
     private final UpdateCourseFactory factory;
 
-    void updateCourse(UpdateCourseDto dto) throws Exception {
+    void updateCourse(UpdateCourseDto dto) throws UpdateCourseFactory.CreateEntityException, UpdateCourseEntity.CourseValidationError {
         var entity = factory.create(dto);
         var snapshot = entity.save();
         repository.save(snapshot);

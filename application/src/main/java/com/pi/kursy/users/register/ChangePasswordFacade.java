@@ -10,7 +10,7 @@ class ChangePasswordFacade {
     private final ChangePasswordFactory factory;
     private final ChangePasswordRepository repository;
 
-    void changePassword(ChangePasswordDto dto) throws Exception {
+    void changePassword(ChangePasswordDto dto) throws ChangePasswordEntity.ChangePasswordException, ChangePasswordFactory.CreateEntityException {
         var changePasswordEntity = factory.create(dto);
         var snapshot = changePasswordEntity.changePassword();
         repository.update(snapshot);

@@ -10,7 +10,7 @@ class AddCategoryFacade {
     private final AddCategoryRepository repository;
     private final AddCategoryFactory factory;
 
-    AddCategoryResponseDto addCategory(AddCategoryDto dto) throws Exception {
+    AddCategoryResponseDto addCategory(AddCategoryDto dto) throws AddCategoryEntity.CategoryValidationError {
         var entity = factory.create(dto);
         var snapshot = entity.save();
         repository.save(snapshot);

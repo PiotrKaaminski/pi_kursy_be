@@ -1,6 +1,7 @@
 package com.pi.kursy.courses.add;
 
 import com.pi.kursy.security.shared.RoleEnum;
+import com.pi.kursy.shared.GenericException;
 import org.springframework.util.StringUtils;
 
 import java.util.Set;
@@ -26,11 +27,10 @@ class AddCourseEntity {
         this.description = description;
     }
 
-    AddCourseSnapshot save() throws Exception {
+    AddCourseSnapshot save() throws CourseValidationError {
         validateName();
         validatePrice();
         validateCategoryIds();
-        validateTeacher();
         validateDescription();
 
         fillMissingFields();
@@ -38,47 +38,45 @@ class AddCourseEntity {
         return toSnapshot();
     }
 
-    private void validateName() throws Exception {
+    private void validateName() throws CourseValidationError {
         if (!StringUtils.hasText(name)) {
-            throw new Exception("Name cannot be empty");
+            throw new CourseValidationError("Name cannot be empty", CourseValidationError.Status.NAME_EMPTY);
         }
         if (name.length() < 10) {
-            throw new Exception("Name cannot be shorter than 10 characters");
+            throw new CourseValidationError("Name cannot be shorter than 10 characters", CourseValidationError.Status.NAME_TOO_SHORT);
         }
         if (name.length() > 255) {
-            throw new Exception("Name cannot be longer than 255 characters");
+            throw new CourseValidationError("Name cannot be longer than 255 characters", CourseValidationError.Status.NAME_TOO_LONG);
         }
     }
-    private void validatePrice() throws Exception {
+    private void validatePrice() throws CourseValidationError {
         if (price == null) {
-            throw new Exception("Price cannot be null");
+            throw new CourseValidationError("Price cannot be null", CourseValidationError.Status.PRICE_EMPTY);
         }
         if (price <= 0) {
-            throw new Exception("Price cannot be less than or equal to 0");
+            throw new CourseValidationError("Price cannot be less than or equal to 0", CourseValidationError.Status.PRICE_TOO_LOW);
         }
         if (price >= 100_000) {
-            throw new Exception("Price cannot be grater than 100 000");
+            throw new CourseValidationError("Price cannot be grater than 100 000", CourseValidationError.Status.PRICE_TOO_HIGH);
         }
     }
-    private void validateCategoryIds() throws Exception {
+    private void validateCategoryIds() throws CourseValidationError {
         if (categoryIds == null || categoryIds.isEmpty()) {
-            throw new Exception("Categories cannot be empty");
+            throw new CourseValidationError("Categories cannot be empty", CourseValidationError.Status.CATEGORIES_EMPTY);
         }
         for (var categoryId : categoryIds) {
             if (repository.categoryDoesntExistById(categoryId)) {
-                throw new Exception("Category with id " + categoryId + " doesn't exist");
+                throw new CourseValidationError("Category with id " + categoryId + " doesn't exist", CourseValidationError.Status.CATEGORY_NOT_FOUND);
             }
         }
     }
-    private void validateTeacher() throws Exception {
-        teacher.validate();
-    }
-    private void validateDescription() throws Exception {
+
+    private void validateDescription() throws CourseValidationError {
         if (!StringUtils.hasText(description)) {
-            throw new Exception("Description cannot be empty");
+            throw new CourseValidationError("Description cannot be empty", CourseValidationError.Status.DESCRIPTION_EMPTY);
         }
         if (description.length() < 10) {
-            throw new Exception("Description cannot be shorter than 10 characters");
+            throw new CourseValidationError("Description cannot be shorter than 10 characters", CourseValidationError.Status.DESCRIPTION_TOO_SHORT);
         }
     }
 
@@ -106,16 +104,6 @@ class AddCourseEntity {
             this.role = role;
         }
 
-        private void validate() throws Exception {
-            if (isNotTeacher()) {
-                throw new Exception("Teacher with id " + id + " is not teacher");
-            }
-        }
-
-        private boolean isNotTeacher() {
-            return !role.equals(RoleEnum.TEACHER);
-        }
-
         static Teacher fromSnapshot(AddCourseTeacherSnapshot snapshot) {
             return new Teacher(snapshot.id(), snapshot.role());
         }
@@ -126,5 +114,28 @@ class AddCourseEntity {
                     role
             );
         }
+    }
+
+    static class CourseValidationError extends GenericException {
+
+        private final Status status;
+
+        CourseValidationError(String message, Status status) {
+            super(message);
+            this.status = status;
+        }
+
+        public String getStatus() {
+            return status.name();
+        }
+
+        enum Status {
+            NAME_EMPTY, NAME_TOO_SHORT, NAME_TOO_LONG,
+            PRICE_EMPTY, PRICE_TOO_LOW, PRICE_TOO_HIGH,
+            CATEGORIES_EMPTY, CATEGORY_NOT_FOUND,
+            DESCRIPTION_EMPTY, DESCRIPTION_TOO_SHORT
+
+        }
+
     }
 }

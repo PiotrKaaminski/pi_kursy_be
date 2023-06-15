@@ -2,6 +2,7 @@ package com.pi.kursy.security.authentication.logout;
 
 import com.pi.kursy.security.jwt.JwtToken;
 import com.pi.kursy.security.jwt.JwtTokenFactory;
+import com.pi.kursy.shared.GenericException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -47,13 +48,16 @@ public class LogoutFacade {
         }
     }
 
-    public static class InvalidTokenException extends Exception {
-        @Getter
+    public static class InvalidTokenException extends GenericException {
         private final TokenError error;
 
         InvalidTokenException(TokenError error, String message) {
             super(message);
             this.error = error;
+        }
+
+        public String getStatus() {
+            return error.name();
         }
 
         enum TokenError {

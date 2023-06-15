@@ -10,7 +10,7 @@ class BuyCourseFacade {
     private final BuyCourseRepository repository;
     private final BuyCourseFactory factory;
 
-    void buyCourse(BuyCourseDto dto) throws Exception {
+    void buyCourse(BuyCourseDto dto) throws BuyCourseFactory.CreateEntityException, BuyCourseEntity.BuyCourseValidationException {
         var entity = factory.create(dto);
         var snapshot = entity.buy();
         repository.save(snapshot);

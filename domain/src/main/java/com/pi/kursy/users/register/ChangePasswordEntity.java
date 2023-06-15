@@ -1,5 +1,7 @@
 package com.pi.kursy.users.register;
 
+import com.pi.kursy.shared.GenericException;
+
 class ChangePasswordEntity {
 
     private final PasswordValidator passwordValidator;
@@ -20,23 +22,23 @@ class ChangePasswordEntity {
         this.newPassword = newPassword;
     }
 
-    ChangePasswordSnapshot changePassword() throws Exception {
+    ChangePasswordSnapshot changePassword() throws ChangePasswordException {
         validatePassword();
         // encode new password and set as current
         encodeNewPassword();
         return toSnapshot();
     }
 
-    private void validatePassword() throws Exception {
+    private void validatePassword() throws ChangePasswordException {
         if (passwordValidator.isInvalid(newPassword)) {
-            throw new Exception("password is invalid");
+            throw new ChangePasswordException("password is invalid", ChangePasswordException.Status.PASSWORD_INVALID);
         }
         if (!passwordEncoder.matches(oldPassword, password)) {
-            throw new Exception("Old password is different than current");
+            throw new ChangePasswordException("Old password is different than current", ChangePasswordException.Status.PASSWORD_DIFFERENT);
         }
 
         if (newPassword.equals(oldPassword)) {
-            throw new Exception("New password is the same as old password");
+            throw new ChangePasswordException("New password is the same as old password", ChangePasswordException.Status.PASSWORD_IDENTICAL);
         }
     }
 
@@ -92,6 +94,25 @@ class ChangePasswordEntity {
 
         ChangePasswordEntity build() {
             return new ChangePasswordEntity(passwordValidator, passwordEncoder, id, password, oldPassword, newPassword);
+        }
+    }
+
+    static class ChangePasswordException extends GenericException {
+
+        private final Status status;
+
+        ChangePasswordException(String message, Status status) {
+            super(message);
+            this.status = status;
+        }
+
+        public String getStatus() {
+            return status.name();
+        }
+
+        enum Status {
+            PASSWORD_DIFFERENT, PASSWORD_IDENTICAL, PASSWORD_INVALID
+
         }
     }
 }

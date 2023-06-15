@@ -10,7 +10,7 @@ class AddCourseFacade {
     private final AddCourseRepository repository;
     private final AddCourseFactory factory;
 
-    AddCourseResponseDto addCourse(AddCourseDto dto) throws Exception {
+    AddCourseResponseDto addCourse(AddCourseDto dto) throws AddCourseFactory.CreateEntityError, AddCourseEntity.CourseValidationError {
         var entity = factory.create(dto);
         var snapshot = entity.save();
         repository.save(snapshot);

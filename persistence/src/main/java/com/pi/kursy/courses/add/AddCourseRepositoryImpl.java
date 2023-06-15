@@ -1,5 +1,6 @@
 package com.pi.kursy.courses.add;
 
+import com.pi.kursy.security.shared.RoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +16,7 @@ class AddCourseRepositoryImpl implements AddCourseRepository {
 
     @Override
     public Optional<AddCourseTeacherSnapshot> findTeacherById(String id) {
-        return teacherJpaRepository.findById(id)
+        return teacherJpaRepository.findByIdAndRole(id, RoleEnum.TEACHER)
                 .map(AddCourseTeacherJpaEntity::toSnapshot);
     }
 

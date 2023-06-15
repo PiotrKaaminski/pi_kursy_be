@@ -1,6 +1,7 @@
 package com.pi.kursy.courses.buy;
 
 import com.pi.kursy.security.shared.RoleEnum;
+import com.pi.kursy.shared.GenericException;
 
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ class BuyCourseEntity {
         this.repository = repository;
     }
 
-    BuyCourseSnapshot buy() throws Exception {
+    BuyCourseSnapshot buy() throws BuyCourseValidationException {
         validate();
 
         fillMissingFields();
@@ -25,15 +26,15 @@ class BuyCourseEntity {
         return toSnapshot();
     }
 
-    private void validate() throws Exception {
+    private void validate() throws BuyCourseValidationException {
         if (client.role.equals(RoleEnum.ADMIN)) {
-            throw new Exception("Client with id " + client.id + " is admin and has access to all courses");
+            throw new BuyCourseValidationException("Client with id " + client.id + " is admin and has access to all courses", BuyCourseValidationException.Status.ALREADY_HAS_ACCESS);
         }
         if (client.id.equals(course.teacher.id)) {
-            throw new Exception("Client with id " + client.id + " is already a teacher of course with id " + course.id);
+            throw new BuyCourseValidationException("Client with id " + client.id + " is already a teacher of course with id " + course.id, BuyCourseValidationException.Status.ALREADY_HAS_ACCESS);
         }
         if (repository.accessExists(client.id, course.id)) {
-            throw new Exception("Client with id " + client.id + " already has access to course with id " + course.id);
+            throw new BuyCourseValidationException("Client with id " + client.id + " already has access to course with id " + course.id, BuyCourseValidationException.Status.ALREADY_HAS_ACCESS);
         }
     }
 
@@ -114,6 +115,25 @@ class BuyCourseEntity {
                         id
                 );
             }
+        }
+    }
+
+    static class BuyCourseValidationException extends GenericException {
+
+        private final Status status;
+
+        BuyCourseValidationException(String message, Status status) {
+            super(message);
+            this.status = status;
+        }
+
+        public String getStatus() {
+            return status.name();
+        }
+
+        enum Status {
+            ALREADY_HAS_ACCESS
+
         }
     }
 }

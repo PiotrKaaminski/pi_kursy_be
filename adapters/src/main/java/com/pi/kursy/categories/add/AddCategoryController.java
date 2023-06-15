@@ -1,10 +1,11 @@
 package com.pi.kursy.categories.add;
 
+import com.pi.kursy.shared.ErrorResponse;
+import com.pi.kursy.shared.GenericException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("categories")
@@ -14,9 +15,16 @@ class AddCategoryController {
     private final AddCategoryFacade facade;
 
     @PostMapping
-    AddCategoryResponse addCategory(@RequestBody AddCategoryRequest request) throws Exception {
+    AddCategoryResponse addCategory(@RequestBody AddCategoryRequest request) throws AddCategoryEntity.CategoryValidationError {
         var responseDto = facade.addCategory(request.toDto());
         return AddCategoryResponse.fromDto(responseDto);
+    }
+
+    @ExceptionHandler(GenericException.class)
+    ResponseEntity<ErrorResponse> handleError(GenericException error) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                ErrorResponse.fromGenericException(error)
+        );
     }
 
     record AddCategoryRequest(String name) {
@@ -30,4 +38,5 @@ class AddCategoryController {
             return new AddCategoryResponse(dto.id());
         }
     }
+
 }

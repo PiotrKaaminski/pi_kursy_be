@@ -1,5 +1,6 @@
 package com.pi.kursy.courses.update;
 
+import com.pi.kursy.shared.GenericException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,14 +10,14 @@ class UpdateCourseFactory {
 
     private final UpdateCourseRepository repository;
 
-    UpdateCourseEntity create(UpdateCourseDto dto) throws Exception {
+    UpdateCourseEntity create(UpdateCourseDto dto) throws CreateEntityException {
         var courseSnapshot = repository.findById(dto.id()).orElseThrow(
-                () -> new Exception("Course with id " + dto.id() + " doesn't exist")
+                () -> new CreateEntityException("Course with id " + dto.id() + " doesn't exist", CreateEntityException.Status.COURSE_NOT_FOUND)
         );
         return mapToEntity(courseSnapshot, dto);
     }
 
-    private UpdateCourseEntity mapToEntity(UpdateCourseSnapshot snapshot, UpdateCourseDto dto) throws Exception {
+    private UpdateCourseEntity mapToEntity(UpdateCourseSnapshot snapshot, UpdateCourseDto dto) throws CreateEntityException {
         return new UpdateCourseEntity(
                 repository,
                 snapshot.id(),
@@ -28,10 +29,29 @@ class UpdateCourseFactory {
         );
     }
 
-    private UpdateCourseEntity.Teacher findTeacher(String id) throws Exception {
+    private UpdateCourseEntity.Teacher findTeacher(String id) throws CreateEntityException {
         return repository.findTeacherById(id)
                 .map(UpdateCourseEntity.Teacher::fromSnapshot)
-                .orElseThrow(() -> new Exception("Teacher with id " + id + " doesn't exist"));
+                .orElseThrow(() -> new CreateEntityException("Teacher with id " + id + " doesn't exist", CreateEntityException.Status.TEACHER_NOT_FOUND));
+    }
+
+    static class CreateEntityException extends GenericException {
+
+        private final Status status;
+
+        CreateEntityException(String message, Status status) {
+            super(message);
+            this.status = status;
+        }
+
+        public String getStatus() {
+            return status.name();
+        }
+
+        enum Status {
+            TEACHER_NOT_FOUND,
+            COURSE_NOT_FOUND
+        }
     }
 
 }

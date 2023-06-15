@@ -1,10 +1,11 @@
 package com.pi.kursy.courses.add;
 
+import com.pi.kursy.shared.ErrorResponse;
+import com.pi.kursy.shared.GenericException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
@@ -16,9 +17,16 @@ class AddCourseController {
     private final AddCourseFacade facade;
 
     @PostMapping
-    AddCourseResponse addCourse(@RequestBody AddCourseRequest request) throws Exception {
+    AddCourseResponse addCourse(@RequestBody AddCourseRequest request) throws AddCourseFactory.CreateEntityError, AddCourseEntity.CourseValidationError {
         var responseDto = facade.addCourse(request.toDto());
         return AddCourseResponse.fromDto(responseDto);
+    }
+
+    @ExceptionHandler(GenericException.class)
+    ResponseEntity<ErrorResponse> handleError(GenericException error) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                ErrorResponse.fromGenericException(error)
+        );
     }
 
 
