@@ -40,9 +40,6 @@ dependencies {
     liquibaseRuntime 'org.postgresql:postgresql'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
 liquibase {
     activities {
         main {
