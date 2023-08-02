@@ -1,6 +1,7 @@
 package com.pi.kursy.security.authentication.login;
 
 import com.pi.kursy.security.authentication.logout.LogoutFacade;
+import com.pi.kursy.security.shared.RoleEnum;
 import com.pi.kursy.shared.ErrorResponse;
 import com.pi.kursy.shared.GenericException;
 import lombok.RequiredArgsConstructor;
@@ -42,9 +43,16 @@ class LoginController {
             );
         }
     }
-    record LoginResponse(String token) {
+    record LoginResponse(
+            String token,
+            String username,
+            RoleEnum role) {
         static LoginResponse fromDto(LoginResponseDto dto) {
-            return new LoginResponse(dto.token());
+            return new LoginResponse(
+                    dto.token(),
+                    dto.username(),
+                    dto.role()
+            );
         }
     }
 }

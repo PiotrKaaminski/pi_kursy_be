@@ -26,13 +26,13 @@ class LoginFacade {
 
         var userSnapshot = repository.findByUsername(dto.username()).orElseThrow(LoginException::new);
         JwtToken token = jwtTokenFactory.fromUserData(userSnapshot.toJwtData());
-        return new LoginResponseDto(token.getEncodedToken());
+        return new LoginResponseDto(token.getEncodedToken(), userSnapshot.username(), userSnapshot.role());
     }
 
     LoginResponseDto refresh(String authorizationHeader) throws LogoutFacade.InvalidTokenException {
         var jwtToken = logoutFacade.logout(authorizationHeader);
         jwtToken = jwtToken.refreshToken();
-        return new LoginResponseDto(jwtToken.getEncodedToken());
+        return new LoginResponseDto(jwtToken.getEncodedToken(), null, null);
     }
 
     static class LoginException extends GenericException {

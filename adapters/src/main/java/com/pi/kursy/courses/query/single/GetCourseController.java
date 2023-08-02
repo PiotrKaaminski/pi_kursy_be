@@ -1,6 +1,7 @@
 package com.pi.kursy.courses.query.single;
 
 import com.pi.kursy.security.configuration.UserDetailsServiceImpl;
+import com.pi.kursy.security.shared.RoleEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +24,9 @@ class GetCourseController {
     GetCourseResponse getCourse(
             @PathVariable String id,
             UsernamePasswordAuthenticationToken authentication) {
-        var userId = authentication == null ? null : ((UserDetailsServiceImpl.UserPrincipal) authentication.getPrincipal()).getId();
-        var responseDto = facade.getCourse(id, Optional.ofNullable(userId));
-        return GetCourseResponse.fromDto(responseDto);
+        var user = authentication == null ? null : (UserDetailsServiceImpl.UserPrincipal) authentication.getPrincipal();
+        var responseDto = facade.getCourse(id, Optional.ofNullable(user == null ? null : user.getId()));
+        return GetCourseResponse.fromDto(responseDto, user);
     }
 
 
@@ -40,13 +41,23 @@ class GetCourseController {
             List<Section> sections
     ) {
 
-        static GetCourseResponse fromDto(GetCourseResponseDto dto) {
+        static GetCourseResponse fromDto(GetCourseResponseDto dto, UserDetailsServiceImpl.UserPrincipal user) {
+            Boolean hasAccess;
+            if (user == null ) {
+                hasAccess = false;
+            } else if (user.getRole().equals(RoleEnum.ADMIN)) {
+                hasAccess = true;
+            } else if (user.getId().equals(dto.teacher().id())) {
+                hasAccess = true;
+            } else {
+                hasAccess = dto.hasAccess();
+            }
             return new GetCourseResponse(
                     dto.id(),
                     dto.name(),
                     dto.price(),
                     dto.description(),
-                    dto.hasAccess(),
+                    hasAccess,
                     Teacher.fromDto(dto.teacher()),
                     dto.categories().stream().map(Category::fromDto).collect(Collectors.toList()),
                     dto.sections().stream().map(Section::fromDto).collect(Collectors.toList())

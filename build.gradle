@@ -8,6 +8,6 @@ ext {
     db.name = "pi_kursy"
     db.host = "localhost"
     db.port = "5432"
-    db.schema = "categories"
+    db.schema = "pi_kursy"
     db.url = "jdbc:postgresql://${db.host}:${db.port}/${db.name}"
 }
