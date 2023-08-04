@@ -44,11 +44,13 @@ class LoginController {
         }
     }
     record LoginResponse(
+            String id,
             String token,
             String username,
             RoleEnum role) {
         static LoginResponse fromDto(LoginResponseDto dto) {
             return new LoginResponse(
+                    dto.id(),
                     dto.token(),
                     dto.username(),
                     dto.role()

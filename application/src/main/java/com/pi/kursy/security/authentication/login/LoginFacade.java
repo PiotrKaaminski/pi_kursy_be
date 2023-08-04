@@ -4,7 +4,6 @@ import com.pi.kursy.security.authentication.logout.LogoutFacade;
 import com.pi.kursy.security.jwt.JwtToken;
 import com.pi.kursy.security.jwt.JwtTokenFactory;
 import com.pi.kursy.shared.GenericException;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,13 +25,13 @@ class LoginFacade {
 
         var userSnapshot = repository.findByUsername(dto.username()).orElseThrow(LoginException::new);
         JwtToken token = jwtTokenFactory.fromUserData(userSnapshot.toJwtData());
-        return new LoginResponseDto(token.getEncodedToken(), userSnapshot.username(), userSnapshot.role());
+        return new LoginResponseDto(userSnapshot.id(), token.getEncodedToken(), userSnapshot.username(), userSnapshot.role());
     }
 
     LoginResponseDto refresh(String authorizationHeader) throws LogoutFacade.InvalidTokenException {
         var jwtToken = logoutFacade.logout(authorizationHeader);
         jwtToken = jwtToken.refreshToken();
-        return new LoginResponseDto(jwtToken.getEncodedToken(), null, null);
+        return new LoginResponseDto(null, jwtToken.getEncodedToken(), null, null);
     }
 
     static class LoginException extends GenericException {
